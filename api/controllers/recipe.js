@@ -1,9 +1,11 @@
 import Recipe from "../models/recipe.js";
+import Ingredient from "../models/ingredient.js";
 
 const recipe = {
     // Get all the recipes
     getAllRecipe: async (req, res) => {
         try {
+            // Get all the recipes
             const recipes = await Recipe.getAll();
             res.status(200).json(recipes);
         } catch (e) {
@@ -16,6 +18,9 @@ const recipe = {
     getRecipeById: async (req, res) => {
         try {
             const recipe = await Recipe.getById(req.params.id);
+            // Get all its ingredients
+            recipe.ingredients = await Ingredient.getAll(req.params.id);
+            // Get the user comments
             res.status(200).json(recipe);
         } catch (e) {
             res.status(404).send("Error fetching the recipe");
@@ -26,8 +31,8 @@ const recipe = {
     // Create new recipe
     createRecipe: async (req, res) => {
         try {
-            const newRecipe = new Recipe(req.body);
-            await newRecipe.save();
+            const recipe = new Recipe(req.body);
+            await recipe.save();
             res.status(200).send("Recipe created successfully");
         } catch (e) {
             res.status(404).send("Error creating the recipe");

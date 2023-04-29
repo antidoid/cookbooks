@@ -1,7 +1,7 @@
 import db from "./connection.js";
 
 class Ingredient {
-  constructor(name, amt) {
+  constructor({ name, amt }) {
     this.name = name;
     this.amt = amt;
   }
@@ -17,10 +17,10 @@ class Ingredient {
     });
   }
 
-  // Save all the ingrediets of a recipe
+  // Save all the ingredients of a recipe
   save(recipe_id) {
     return new Promise((resolve, reject) => {
-      const q = "INSERT into ingrediet SET ?" + ", recipe_id = ?";
+      const q = "INSERT into ingredient SET ?, recipe_id = ?";
       db.query(q, [this, recipe_id], (err, res, fields) => {
         if (err) reject(err);
         resolve(res);
@@ -39,17 +39,6 @@ class Ingredient {
       const q = `UPDATE ingredient SET ${values.join(
         ", "
       )} WHERE recipe_id = ?`;
-      db.query(q, [recipe_id], (err, res, fields) => {
-        if (err) reject(err);
-        resolve(res);
-      });
-    });
-  }
-
-  // Delete all the ingrediets associated with a recipe
-  static delete(recipe_id) {
-    return new Promise((resolve, reject) => {
-      const q = "DELETE FROM ingrediet WHERE recipe_id = ?";
       db.query(q, [recipe_id], (err, res, fields) => {
         if (err) reject(err);
         resolve(res);

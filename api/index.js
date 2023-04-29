@@ -1,4 +1,4 @@
-import express, { urlencoded } from "express";
+import express from "express";
 import Recipe from "./controllers/recipe.js";
 
 const app = express();
