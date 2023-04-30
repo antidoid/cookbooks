@@ -12,6 +12,4 @@ app.put("/recipe/:id", Recipe.updateRecipe);
 app.delete("/recipe/:id", Recipe.deleteRecipe);
 
 // Start the server
-app.listen(8800, () => {
-  console.log("Started the backend server");
-});
+app.listen(8800, () => console.log("Backend server is running..."));
