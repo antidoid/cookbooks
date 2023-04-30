@@ -9,6 +9,7 @@ class Recipe {
     serves,
     difficulty,
     recipetype,
+    category,
     instruction,
     videolink,
     imagelink,
@@ -20,6 +21,7 @@ class Recipe {
     this.serves = serves;
     this.difficulty = difficulty;
     this.recipetype = recipetype;
+    this.category = category;
     this.instruction = instruction;
     this.videolink = videolink;
     this.imagelink = imagelink;

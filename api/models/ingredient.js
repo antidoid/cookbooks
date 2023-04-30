@@ -9,7 +9,7 @@ class Ingredient {
   // Fetch all the ingredients for a recipe
   static getAll(recipe_id) {
     return new Promise((resolve, reject) => {
-      q = "SELECT * FROM ingredient WHERE recipe_id = ?";
+      const q = "SELECT name,amt FROM ingredient WHERE recipe_id = ?";
       db.query(q, [recipe_id], (err, res, fields) => {
         if (err) reject(err);
         resolve(res);
