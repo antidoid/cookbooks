@@ -9,7 +9,7 @@ const recipe = {
             const recipes = await Recipe.getAll();
             res.status(200).json(recipes);
         } catch (e) {
-            res.status(404).send("Error fetching all the recipes");
+            res.status(500).send("Error fetching all the recipes");
             console.error(e);
         }
     },
@@ -23,7 +23,7 @@ const recipe = {
             // Get the user comments
             res.status(200).json(recipe);
         } catch (e) {
-            res.status(404).send("Error fetching the recipe");
+            res.status(500).send("Error fetching the recipe");
             console.error(e);
         }
     },
@@ -35,7 +35,7 @@ const recipe = {
             await recipe.save();
             res.status(200).send("Recipe created successfully");
         } catch (e) {
-            res.status(404).send("Error creating the recipe");
+            res.status(500).send("Error creating the recipe");
             console.error(e);
         }
     },
@@ -47,7 +47,7 @@ const recipe = {
             await modRecipe.update(req.params.id);
             res.status(200).send("Recipe modified successfully");
         } catch (e) {
-            res.status(404).send("Error modifying the recipe");
+            res.status(500).send("Error modifying the recipe");
             console.error(e);
         }
     },
@@ -58,7 +58,7 @@ const recipe = {
             await Recipe.delete(req.params.id);
             res.status(200).send("Recipe delted successfully");
         } catch (e) {
-            res.status(404).send("Error deleting the recipe");
+            res.status(500).send("Error deleting the recipe");
             console.error(e);
         }
     },
