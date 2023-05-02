@@ -1,12 +1,8 @@
+import admin from "./api/helpers/firebase.js";
 import { getAuth } from "firebase-admin/auth";
-import serviceAccount from "./firebaseAdminCred.json" assert { type: "json" };
 
 export const isLoggedIn = (req, res, next) => {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-  });
-
-  const token = req.headers?.Authorization.split(" ");
+  const token = req.headers?.authorization?.split(" ");
   if (!token || !token[1])
     return res.status(401).send({ message: "Unauthorized" });
 
