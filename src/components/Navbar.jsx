@@ -8,7 +8,9 @@ export const Navbar = () => {
       <ul className="flex grow justify-evenly mx-20">
         <li>HOME</li>
         <li>CATEGORIES</li>
-        <li>EXPLORE</li>
+        <li>
+          <Link to="/explore">EXPLORE</Link>
+        </li>
         <li>ABOUT US</li>
       </ul>
       <Link to="/login">

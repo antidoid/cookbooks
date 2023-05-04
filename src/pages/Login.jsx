@@ -7,12 +7,15 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import auth from "../../utils/firebase.js";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
   const loginWithGoogle = async () => {
     try {
       const res = await signInWithPopup(auth, new GoogleAuthProvider());
-      console.log(res.user);
+      console.log(res.user.accessToken);
+      navigate("/explore");
     } catch (e) {
       console.log(e);
     }
@@ -21,7 +24,8 @@ const Login = () => {
   const loginWithGithub = async () => {
     try {
       const res = await signInWithPopup(auth, new GithubAuthProvider());
-      console.log(res.user);
+      console.log(res.user.accessToken);
+      navigate("/explore");
     } catch (e) {
       console.log(e.message);
     }
