@@ -10,12 +10,12 @@ router.use(express.json());
 app.use("/api", router);
 
 // Recipe routes
-app.get("/recipe", Recipe.getAllRecipe);
-app.get("/recipe/:id", Recipe.getRecipeById);
-app.post("/recipe", isLoggedIn, Recipe.createRecipe);
-app.put("/recipe/:id", isLoggedIn, Recipe.updateRecipe);
-app.delete("/recipe/:id", isLoggedIn, Recipe.deleteRecipe);
+router.get("/recipe", Recipe.getAllRecipe);
+router.get("/recipe/:id", Recipe.getRecipeById);
+router.post("/recipe", isLoggedIn, Recipe.createRecipe);
+router.put("/recipe/:id", isLoggedIn, Recipe.updateRecipe);
+router.delete("/recipe/:id", isLoggedIn, Recipe.deleteRecipe);
 
 // Start the server
 app.listen(8800, () => console.log("Backend server is running..."));
-export const handler = serverless(api);
+export const handler = serverless(app);
