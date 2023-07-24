@@ -1,7 +1,7 @@
 import express, { Router } from "express";
 import serverless from "serverless-http";
 import Recipe from "./controllers/recipe.js";
-import { isLoggedIn } from "../middleware.js";
+import { isLoggedIn } from "./helpers/middleware.js";
 
 const app = express();
 
