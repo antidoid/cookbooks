@@ -1,3 +1,4 @@
+import app from "./firebase.js";
 import { getAuth } from "firebase-admin/auth";
 
 export const isLoggedIn = (req, res, next) => {
