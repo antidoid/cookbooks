@@ -1,9 +1,11 @@
 import "dotenv/config";
 import express, { Router } from "express";
+import cors from "cors";
 import Recipe from "./controllers/recipe.js";
 import { isLoggedIn } from "./helpers/middleware.js";
 
 const app = express();
+app.use(cors({ origin: [process.env.FRONTEND_URL, "*"] }));
 
 const router = Router();
 router.use(express.json());
