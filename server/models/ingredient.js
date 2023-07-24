@@ -9,7 +9,8 @@ class Ingredient {
   // Fetch all the ingredients for a recipe
   static getAll(recipe_id) {
     return new Promise((resolve, reject) => {
-      const q = "SELECT name,amt FROM ingredient WHERE recipe_id = ?";
+      const q =
+        "SELECT ingredientid,name,amt FROM ingredient WHERE recipeid = ?";
       db.query(q, [recipe_id], (err, res, fields) => {
         if (err) reject(err);
         resolve(res);
@@ -37,7 +38,7 @@ class Ingredient {
       }
 
       const q = `UPDATE ingredient SET ${values.join(
-        ", "
+        ", ",
       )} WHERE recipe_id = ?`;
       db.query(q, [recipe_id], (err, res, fields) => {
         if (err) reject(err);

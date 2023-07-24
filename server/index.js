@@ -1,5 +1,5 @@
+import "dotenv/config";
 import express, { Router } from "express";
-import serverless from "serverless-http";
 import Recipe from "./controllers/recipe.js";
 import { isLoggedIn } from "./helpers/middleware.js";
 
@@ -9,6 +9,8 @@ const router = Router();
 router.use(express.json());
 app.use("/api", router);
 
+const PORT = process.env.PORT || 8080;
+
 // Recipe routes
 router.get("/recipe", Recipe.getAllRecipe);
 router.get("/recipe/:id", Recipe.getRecipeById);
@@ -17,5 +19,4 @@ router.put("/recipe/:id", isLoggedIn, Recipe.updateRecipe);
 router.delete("/recipe/:id", isLoggedIn, Recipe.deleteRecipe);
 
 // Start the server
-app.listen(8800, () => console.log("Backend server is running..."));
-export const handler = serverless(app);
+app.listen(PORT, () => console.log("Backend server is running..."));
