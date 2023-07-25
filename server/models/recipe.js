@@ -31,7 +31,7 @@ class Recipe {
   // Code to get all recipes from the database
   static getAll() {
     return new Promise((resolve, reject) => {
-      db.query("SELECT * FROM recipe", (err, res, fields) => {
+      db.query("SELECT * FROM recipe", (err, res) => {
         if (err) return reject(err);
         resolve(res);
       });
@@ -42,7 +42,7 @@ class Recipe {
   static getById(id) {
     return new Promise((resolve, reject) => {
       const q = "SELECT * FROM recipe WHERE id = ?";
-      db.query(q, [id], (err, res, fields) => {
+      db.query(q, [id], (err, res) => {
         if (err) return reject(err);
         const [data] = res;
         resolve(data);
@@ -59,7 +59,7 @@ class Recipe {
         const q = "INSERT INTO recipe SET ?";
         const { ingredients, ...values } = this;
 
-        db.query(q, [values], (err, result, fields) => {
+        db.query(q, [values], (err, result) => {
           if (err) return db.rollback(() => reject(err));
 
           const ingredientPromises = [];
@@ -90,15 +90,13 @@ class Recipe {
   // Code to update the recipe in the database
   update(id) {
     return new Promise((resolve, reject) => {
-      const values = [];
-      for (const key in this) {
-        // A user is not allowed to modify the ingredients once its created
-        if (this[key] && key !== "ingredients")
-          values.push(`${key} = '${this[key]}'`);
-      }
+      const values = Object.entries(this)
+        .filter(([key, value]) => value && key !== "ingredients")
+        .map(([key, value]) => `${key} = ${value}`)
+        .join(", ");
 
-      const q = `UPDATE recipe SET ${values.join(", ")} WHERE id = ?`;
-      db.query(q, [id], (err, res, fileds) => {
+      const q = `UPDATE recipe SET ${values} WHERE id = ?`;
+      db.query(q, [id], (err, res) => {
         if (err) return reject(err);
         resolve(res);
       });
@@ -109,7 +107,7 @@ class Recipe {
   static remove(id) {
     return new Promise((resolve, reject) => {
       const q = "DELETE FROM recipe WHERE id = ?";
-      db.query(q, [id], (err, res, fields) => {
+      db.query(q, [id], (err, res) => {
         if (err) return reject(err);
         resolve(res);
       });
