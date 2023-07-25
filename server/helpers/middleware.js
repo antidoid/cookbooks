@@ -6,7 +6,7 @@ export const isLoggedIn = (req, res, next) => {
   if (!token || !token[1])
     return res.status(401).send({ message: "Unauthorized" });
 
-  getAuth()
+  getAuth(app)
     .verifyIdToken(token[1])
     .then((decodedToken) => {
       req.user = decodedToken;
