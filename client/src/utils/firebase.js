@@ -2,14 +2,17 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAuqmDNlayCz_TWpq7wsXD0ih960eD3AAs",
-    authDomain: "cookbooks-ad583.firebaseapp.com",
-    projectId: "cookbooks-ad583",
-    storageBucket: "cookbooks-ad583.appspot.com",
-    messagingSenderId: "224316404113",
-    appId: "1:224316404113:web:01a278d1f81c5298abaa30",
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
+
+console.log(firebaseConfig);
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+
 export default auth;
