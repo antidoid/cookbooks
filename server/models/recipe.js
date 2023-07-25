@@ -4,7 +4,7 @@ import Ingredient from "../models/ingredient.js";
 class Recipe {
   constructor({
     name,
-    desc,
+    description,
     preparetime,
     serves,
     difficulty,
@@ -16,7 +16,7 @@ class Recipe {
     ingredients,
   }) {
     this.name = name;
-    this.desc = desc;
+    this.description = description;
     this.preparetime = preparetime;
     this.serves = serves;
     this.difficulty = difficulty;
@@ -32,7 +32,7 @@ class Recipe {
   static getAll() {
     return new Promise((resolve, reject) => {
       db.query("SELECT * FROM recipe", (err, res, fields) => {
-        if (err) reject(err);
+        if (err) return reject(err);
         resolve(res);
       });
     });
@@ -43,7 +43,7 @@ class Recipe {
     return new Promise((resolve, reject) => {
       const q = "SELECT * FROM recipe WHERE id = ?";
       db.query(q, [id], (err, res, fields) => {
-        if (err) reject(err);
+        if (err) return reject(err);
         const [data] = res;
         resolve(data);
       });
@@ -53,55 +53,35 @@ class Recipe {
   // Code to save a recipe to the database
   save() {
     return new Promise((resolve, reject) => {
-      db.getConnection((err, conn) => {
-        if (err) reject(err);
+      db.beginTransaction((err) => {
+        if (err) return reject(err);
 
-        conn.beginTransaction((err) => {
-          if (err) {
-            conn.release();
-            reject(err);
-          }
+        const q = "INSERT INTO recipe SET ?";
+        const { ingredients, ...values } = this;
 
-          const q = "INSERT INTO recipe SET ?";
-          const { ingredients, ...values } = this;
-          conn.query(q, [values], (err, res, fields) => {
-            if (err) {
-              conn.rollback(() => {
-                conn.release();
-                reject(err);
-              });
-            }
+        db.query(q, [values], (err, result, fields) => {
+          if (err) return db.rollback(() => reject(err));
 
-            const ingredientPromises = [];
-            ingredients.forEach(async (ingredient) => {
-              const ingredientObj = new Ingredient(ingredient);
-              ingredientPromises.push(
-                await new Promise((resolve, reject) => {
-                  ingredientObj.save(res.insertId).then(resolve).catch(reject);
-                })
-              );
-            });
-
-            Promise.all(ingredientPromises)
-              .then(() => {
-                conn.commit((err) => {
-                  if (err) {
-                    conn.rollback(() => {
-                      conn.release();
-                      reject(err);
-                    });
-                  }
-                  conn.release();
-                  resolve();
-                });
-              })
-              .catch((err) => {
-                conn.rollback(() => {
-                  conn.release();
-                  reject(err);
-                });
-              });
+          const ingredientPromises = [];
+          ingredients.forEach(async (ingredient) => {
+            const ingredientObj = new Ingredient(ingredient);
+            ingredientPromises.push(
+              await new Promise((resolve, reject) => {
+                ingredientObj.save(result.insertId).then(resolve).catch(reject);
+              }),
+            );
           });
+
+          Promise.all(ingredientPromises)
+            .then(() => {
+              db.commit((err) => {
+                if (err) return db.rollback(() => reject(err));
+                resolve();
+              });
+            })
+            .catch((err) => {
+              return db.rollback(() => reject(err));
+            });
         });
       });
     });
@@ -119,18 +99,18 @@ class Recipe {
 
       const q = `UPDATE recipe SET ${values.join(", ")} WHERE id = ?`;
       db.query(q, [id], (err, res, fileds) => {
-        if (err) reject(err);
+        if (err) return reject(err);
         resolve(res);
       });
     });
   }
 
   // Code to delete the recipe from the database
-  static delete(id) {
+  static remove(id) {
     return new Promise((resolve, reject) => {
       const q = "DELETE FROM recipe WHERE id = ?";
       db.query(q, [id], (err, res, fields) => {
-        if (err) reject(err);
+        if (err) return reject(err);
         resolve(res);
       });
     });

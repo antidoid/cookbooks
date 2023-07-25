@@ -7,11 +7,11 @@ class Ingredient {
   }
 
   // Fetch all the ingredients for a recipe
-  static getAll(recipe_id) {
+  static getAll(recipeId) {
     return new Promise((resolve, reject) => {
       const q =
         "SELECT ingredientid,name,amt FROM ingredient WHERE recipeid = ?";
-      db.query(q, [recipe_id], (err, res, fields) => {
+      db.query(q, [recipeId], (err, res, fields) => {
         if (err) reject(err);
         resolve(res);
       });
@@ -19,10 +19,10 @@ class Ingredient {
   }
 
   // Save all the ingredients of a recipe
-  save(recipe_id) {
+  save(recipeId) {
     return new Promise((resolve, reject) => {
-      const q = "INSERT into ingredient SET ?, recipe_id = ?";
-      db.query(q, [this, recipe_id], (err, res, fields) => {
+      const q = "INSERT into ingredient SET ?, recipeid = ?";
+      db.query(q, [this, recipeId], (err, res, fields) => {
         if (err) reject(err);
         resolve(res);
       });
@@ -30,17 +30,15 @@ class Ingredient {
   }
 
   // Update a ingredient of a recipe
-  update(recipe_id) {
+  update(recipeId) {
     return new Promise((resolve, reject) => {
       const values = [];
       for (const key in this) {
         if (this[key]) values.push(`${key} = '${this[key]}'`);
       }
 
-      const q = `UPDATE ingredient SET ${values.join(
-        ", ",
-      )} WHERE recipe_id = ?`;
-      db.query(q, [recipe_id], (err, res, fields) => {
+      const q = `UPDATE ingredient SET ${values.join(", ")} WHERE recipeId = ?`;
+      db.query(q, [recipeId], (err, res, fields) => {
         if (err) reject(err);
         resolve(res);
       });

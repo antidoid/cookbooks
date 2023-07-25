@@ -55,7 +55,7 @@ const recipe = {
     // Delete a recipe
     deleteRecipe: async (req, res) => {
         try {
-            await Recipe.delete(req.params.id);
+            await Recipe.remove(req.params.id);
             res.status(200).send("Recipe delted successfully");
         } catch (e) {
             res.status(500).send("Error deleting the recipe");
