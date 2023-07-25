@@ -92,7 +92,7 @@ class Recipe {
     return new Promise((resolve, reject) => {
       const values = Object.entries(this)
         .filter(([key, value]) => value && key !== "ingredients")
-        .map(([key, value]) => `${key} = ${value}`)
+        .map(([key, value]) => `${key} = '${value}'`)
         .join(", ");
 
       const q = `UPDATE recipe SET ${values} WHERE id = ?`;
