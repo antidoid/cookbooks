@@ -11,8 +11,7 @@ import auth from "../utils/firebase.js";
 const Login = () => {
   const loginWithGoogle = async () => {
     try {
-      const res = await signInWithPopup(auth, new GoogleAuthProvider());
-      console.log(res.user.accessToken);
+      await signInWithPopup(auth, new GoogleAuthProvider());
     } catch (e) {
       console.log(e);
     }
@@ -20,8 +19,7 @@ const Login = () => {
 
   const loginWithGithub = async () => {
     try {
-      const res = await signInWithPopup(auth, new GithubAuthProvider());
-      console.log(res.user.accessToken);
+      await signInWithPopup(auth, new GithubAuthProvider());
     } catch (e) {
       console.log(e.message);
     }
