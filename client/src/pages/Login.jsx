@@ -2,46 +2,47 @@ import React from "react";
 import { FcGoogle } from "react-icons/fc";
 import { AiFillGithub } from "react-icons/ai";
 import {
-    GoogleAuthProvider,
-    GithubAuthProvider,
-    signInWithPopup,
+  GoogleAuthProvider,
+  GithubAuthProvider,
+  signInWithPopup,
 } from "firebase/auth";
 import auth from "../utils/firebase.js";
 
 const Login = () => {
-    const loginWithGoogle = async () => {
-        try {
-            const res = await signInWithPopup(auth, new GoogleAuthProvider());
-            console.log(res.user.accessToken);
-        } catch (e) {
-            console.log(e);
-        }
-    };
+  console.log("rendering login");
+  const loginWithGoogle = async () => {
+    try {
+      const res = await signInWithPopup(auth, new GoogleAuthProvider());
+      console.log(res.user.accessToken);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
-    const loginWithGithub = async () => {
-        try {
-            const res = await signInWithPopup(auth, new GithubAuthProvider());
-            console.log(res.user.accessToken);
-        } catch (e) {
-            console.log(e.message);
-        }
-    };
+  const loginWithGithub = async () => {
+    try {
+      const res = await signInWithPopup(auth, new GithubAuthProvider());
+      console.log(res.user.accessToken);
+    } catch (e) {
+      console.log(e.message);
+    }
+  };
 
-    return (
-        <div>
-            <h2>Join Today</h2>
-            <h3>Sign in with one of the provides</h3>
-            <div>
-                <button onClick={loginWithGoogle}>
-                    <FcGoogle /> Sign in with Google
-                </button>
+  return (
+    <div>
+      <h2>Join Today</h2>
+      <h3>Sign in with one of the provides</h3>
+      <div>
+        <button onClick={loginWithGoogle}>
+          <FcGoogle /> Sign in with Google
+        </button>
 
-                <button onClick={loginWithGithub}>
-                    <AiFillGithub /> Sign in with Github
-                </button>
-            </div>
-        </div>
-    );
+        <button onClick={loginWithGithub}>
+          <AiFillGithub /> Sign in with Github
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default Login;

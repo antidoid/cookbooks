@@ -19,6 +19,5 @@ const router = createHashRouter(
 );
 
 export default function App() {
-  console.log(import.meta.env.DEV);
   return <RouterProvider router={router} />;
 }
