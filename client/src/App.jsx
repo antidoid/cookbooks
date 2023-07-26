@@ -1,17 +1,17 @@
 import React from "react";
 import {
   RouterProvider,
-  createHashRouter,
+  createBrowserRouter,
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
 import { Layout } from "./components";
-import { Login } from "./pages";
+import { Homepage, Login } from "./pages";
 
-const router = createHashRouter(
+const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
-      <Route index element={<h1>Welcome to Cookbooks</h1>} />
+      <Route index element={<Homepage />} />
       <Route path="login" element={<Login />} />
     </Route>,
   ),

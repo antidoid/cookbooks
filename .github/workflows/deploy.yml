@@ -40,7 +40,7 @@ jobs:
           node-version: 18
           cache: "npm"
           cache-dependency-path: "./client/package-lock.json"
-      - run: "cd ./client && npm install && npm run build"
+      - run: "cd ./client && npm install && npm run build && cp ./dist/index.html .dist/404.html"
         env:
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
           VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN  }}
