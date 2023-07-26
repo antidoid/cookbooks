@@ -11,7 +11,7 @@ import { Login } from "./pages";
 const router = createHashRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
-      <Route index element={<h1>Welcome to cookbooks</h1>} />
+      <Route index element={<h1>Welcome to Cookbooks</h1>} />
       <Route path="login" element={<Login />} />
     </Route>,
   ),
