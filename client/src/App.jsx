@@ -6,7 +6,7 @@ import {
   Route,
 } from "react-router-dom";
 import { Layout } from "./components";
-import { Homepage, Login, About, Recipe } from "./pages";
+import { Homepage, Login, About, Recipe, NotFound } from "./pages";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -15,6 +15,7 @@ const router = createBrowserRouter(
       <Route path="recipe" element={<Recipe />} />
       <Route path="login" element={<Login />} />
       <Route path="about" element={<About />} />
+      <Route path="*" element={<NotFound />} />
     </Route>,
   ),
   { basename: import.meta.env.DEV ? "/" : "/cookbooks/" },
