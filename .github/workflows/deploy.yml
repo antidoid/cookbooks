@@ -34,7 +34,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          path: "client" # Checkout only the client directory
+          path: "./client" # Checkout only the client directory
 
       - name: Set up Node
         uses: actions/setup-node@v3
@@ -43,11 +43,11 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        working-directory: client
+        working-directory: ./client
         run: npm install
 
       - name: Build
-        working-directory: client
+        working-directory: ./client
         run: npm run build
 
       - name: Setup Pages
@@ -57,7 +57,7 @@ jobs:
         uses: actions/upload-pages-artifact@v1
         with:
           name: client-dist # Set a name for the artifact
-          path: "client/dist" # Upload the dist directory within /client
+          path: "./client/dist" # Upload the dist directory within /client
 
       - name: Deploy to GitHub Pages
         id: deployment
