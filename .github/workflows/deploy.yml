@@ -33,22 +33,34 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          path: "client" # Checkout only the client directory
+
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: "npm"
+
       - name: Install dependencies
+        working-directory: client
         run: npm install
+
       - name: Build
+        working-directory: client
         run: npm run build
+
       - name: Setup Pages
         uses: actions/configure-pages@v3
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          # Upload dist repository
-          path: "./dist"
+          name: client-dist # Set a name for the artifact
+          path: "client/dist" # Upload the dist directory within /client
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
+        with:
+          artifact-name: client-dist
