@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Menu, MenuItem, MenuButton } from "@szhsin/react-menu";
+import { Menu as ControlledMenu, MenuItem } from "@szhsin/react-menu";
 import { onAuthStateChanged } from "firebase/auth";
-import auth from "../utils/firebase";
+import { auth, logoutUser } from "../utils/api";
 
 export default function Header() {
   const [user, setUser] = useState(null);
@@ -15,17 +15,15 @@ export default function Header() {
         <NavLink to="recipe">Recipes</NavLink>
         <NavLink to="about">About</NavLink>
         {user ? (
-          <Menu menuButton={<img src={user.photoURL} />}>
+          <ControlledMenu menuButton={<img src={user.photoURL} />}>
             <MenuItem>
               <p>Welcome {user.displayName}</p>
             </MenuItem>
             <MenuItem>
               <NavLink to={`host/recipes/${user.uid}`}>My recipes</NavLink>
             </MenuItem>
-            <MenuItem onClick={() => console.log("Signing out...")}>
-              Sign out
-            </MenuItem>
-          </Menu>
+            <MenuItem onClick={logoutUser}>Sign out</MenuItem>
+          </ControlledMenu>
         ) : (
           <NavLink to="login">Login</NavLink>
         )}
