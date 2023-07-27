@@ -8,7 +8,7 @@ import {
 } from "firebase/auth";
 import auth from "../utils/firebase.js";
 
-const Login = () => {
+export default function Login() {
   const loginWithGoogle = async () => {
     try {
       await signInWithPopup(auth, new GoogleAuthProvider());
@@ -40,6 +40,4 @@ const Login = () => {
       </div>
     </div>
   );
-};
-
-export default Login;
+}
