@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import { Layout } from "./components";
 import { Homepage, Login, About, Recipe, NotFound } from "./pages";
+import "./App.css";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

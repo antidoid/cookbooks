@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { AiFillGithub } from "react-icons/ai";
-import { loginUser } from "../utils/api.js";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../utils/api.js";
 
 export default function Login() {
   const [error, setError] = useState(null);
@@ -18,18 +18,31 @@ export default function Login() {
   }
 
   return (
-    <div>
-      {error && <p>{error.message}</p>}
-      <h2>Join Today</h2>
-      <h3>Sign in with one of the providers</h3>
-      <div>
-        <button onClick={() => handleSignIn("Google")}>
-          <FcGoogle /> Sign in with Google
-        </button>
+    <div className="login">
+      <div className="login--form">
+        {error && <p className="error-message">{error.message}</p>}
+        <img src="/src/assets/images/login/elipses.png" />
+        <h2 className="login--header">Sign in with one of the providers</h2>
+        <div className="login--button-container">
+          <button
+            onClick={() => handleSignIn("Google")}
+            className="login--google"
+          >
+            <FcGoogle /> Continue with Google
+          </button>
 
-        <button onClick={() => handleSignIn("Github")}>
-          <AiFillGithub /> Sign in with Github
-        </button>
+          <button
+            onClick={() => handleSignIn("Github")}
+            className="login--github"
+          >
+            <AiFillGithub /> Continue with Github
+          </button>
+        </div>
+      </div>
+      <div className="login--aside">
+        <img src="/src/assets/images/login/dish1.png" />
+        <img src="/src/assets/images/login/dish2.png" />
+        <img src="/src/assets/images/login/dish3.png" />
       </div>
     </div>
   );

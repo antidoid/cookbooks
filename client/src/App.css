@@ -1,0 +1,119 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Inter, sans-serif;
+}
+
+.login {
+  width: 100vw;
+  background-image: url(/src/assets/images/login/background.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  justify-content: space-around;
+  padding: 70px;
+}
+
+.login--form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex-grow: 2;
+  margin-right: 30px;
+}
+
+.login--form > img {
+  width: 85px;
+  margin-top: 50px;
+}
+
+.login--header {
+  margin-top: 80px;
+  background: radial-gradient(
+    2001.08% 124.81% at 2.26% 22.13%,
+    #c91937 0%,
+    #fdb646 100%
+  );
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 3rem;
+}
+
+.login--button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-top: 60px;
+}
+
+.login--google,
+.login--github {
+  display: flex;
+  align-items: center;
+  padding: 20px 32px;
+  border-radius: 15px;
+  border: none;
+  box-shadow: 0px 38.486881256103516px 71.47562408447266px 0px
+    rgba(0, 0, 0, 0.07);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 20px;
+  cursor: pointer;
+}
+
+.login--google {
+  background: white;
+  border: 1px solid #e0e0e9;
+  color: #1d1c2b;
+}
+
+.login--github {
+  background: #24292f;
+  color: white;
+}
+
+.login--google > svg,
+.login--github > svg {
+  width: 24px;
+  height: 24px;
+  margin-right: 16px;
+}
+
+.login--aside {
+  flex-grow: 1;
+  max-width: 30%;
+  display: flex;
+  flex-direction: column;
+}
+
+.login--aside > img {
+  flex-grow: 1;
+}
+
+.login--aside > img:first-of-type {
+  border-top-left-radius: 50px;
+}
+
+.login--aside > img:last-of-type {
+  border-bottom-right-radius: 50px;
+}
+
+@media screen and (max-width: 1024px) {
+  .login--aside {
+    display: none;
+  }
+
+  .login--header {
+    font-size: 2rem;
+  }
+
+  .login {
+    padding: 22px;
+  }
+
+  .login--form {
+    margin-right: 0;
+  }
+}
