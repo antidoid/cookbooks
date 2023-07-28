@@ -11,7 +11,7 @@ export default function Login() {
   async function handleSignIn(providerName) {
     try {
       await loginUser(providerName);
-      navigate("/recipe");
+      navigate("/recipes");
     } catch (err) {
       setError(err);
     }
@@ -21,7 +21,7 @@ export default function Login() {
     <div>
       {error && <p>{error.message}</p>}
       <h2>Join Today</h2>
-      <h3>Sign in with one of the provides</h3>
+      <h3>Sign in with one of the providers</h3>
       <div>
         <button onClick={() => handleSignIn("Google")}>
           <FcGoogle /> Sign in with Google
