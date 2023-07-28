@@ -42,3 +42,8 @@ export async function logoutUser() {
     };
   }
 }
+
+export function getImgUrl(imageNameWithParent) {
+  return new URL(`../assets/images/${imageNameWithParent}`, import.meta.url)
+    .href;
+}

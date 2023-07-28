@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { AiFillGithub } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../utils/api.js";
+import { getImgUrl, loginUser } from "../utils/api.js";
 
 export default function Login() {
   const [error, setError] = useState(null);
@@ -21,7 +21,7 @@ export default function Login() {
     <div className="login">
       <div className="login--form">
         {error && <p className="error-message">{error.message}</p>}
-        <img src="/src/assets/images/login/elipses.png" />
+        <img src={getImgUrl("login/elipses.png")} />
         <h2 className="login--header">Sign in with one of the providers</h2>
         <div className="login--button-container">
           <button
@@ -40,9 +40,9 @@ export default function Login() {
         </div>
       </div>
       <div className="login--aside">
-        <img src="/src/assets/images/login/dish1.png" />
-        <img src="/src/assets/images/login/dish2.png" />
-        <img src="/src/assets/images/login/dish3.png" />
+        <img src={getImgUrl("login/dish1.png")} />
+        <img src={getImgUrl("login/dish2.png")} />
+        <img src={getImgUrl("login/dish3.png")} />
       </div>
     </div>
   );
