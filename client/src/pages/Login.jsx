@@ -40,9 +40,9 @@ export default function Login() {
         </div>
       </div>
       <div className="login--aside">
-        <img src={getImgUrl("login/dish1.png")} />
         <img src={getImgUrl("login/dish2.png")} />
         <img src={getImgUrl("login/dish3.png")} />
+        <img src={getImgUrl("login/dish1.png")} />
       </div>
     </div>
   );
