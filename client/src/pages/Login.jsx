@@ -10,7 +10,8 @@ export default function Login() {
 
   async function handleSignIn(providerName) {
     try {
-      await loginUser(providerName);
+      const user = await loginUser(providerName);
+      console.log(user);
       navigate("/recipes");
     } catch (err) {
       setError(err);
