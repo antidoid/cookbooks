@@ -10,7 +10,7 @@ class Ingredient {
   static getAll(recipeId) {
     return new Promise((resolve, reject) => {
       const q =
-        "SELECT ingredientid,name,amt FROM ingredient WHERE recipe_id = ?";
+        "SELECT ingredient_id,name,amt FROM ingredient WHERE recipe_id = ?";
       db.query(q, [recipeId], (err, res, fields) => {
         if (err) reject(err);
         resolve(res);
