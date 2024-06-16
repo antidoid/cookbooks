@@ -1,18 +1,24 @@
 import mysql from "mysql2";
 
 // Configuring the database connection
-const connection = mysql.createConnection({
+// Create the connection pool
+const pool = mysql.createPool({
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   user: process.env.DB_USER,
   database: process.env.DB_DATABASE,
   password: process.env.DB_PASSWORD,
-  connectTimeout: 30000,
+  waitForConnections: true,
+  connectionLimit: 10,
+  maxIdle: 10,
+  idleTimeout: 60000,
+  queueLimit: 0,
   enableKeepAlive: true,
   keepAliveInitialDelay: 0,
+  connectTimeout: 30000,
 });
 
-connection.connect((err) => {
+pool.getConnection((err, conn) => {
   if (err) {
     console.log("Error connecting to the database", err.message);
     throw err;
@@ -21,4 +27,4 @@ connection.connect((err) => {
   console.log("Database connected successfully");
 });
 
-export default connection;
+export default pool;

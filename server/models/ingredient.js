@@ -1,4 +1,4 @@
-import db from "./connection.js";
+import pool from "./connection.js";
 
 class Ingredient {
   constructor({ name, amt }) {
@@ -9,11 +9,13 @@ class Ingredient {
   // Fetch all the ingredients for a recipe
   static getAll(recipeId) {
     return new Promise((resolve, reject) => {
-      const q =
-        "SELECT ingredient_id,name,amt FROM ingredient WHERE recipe_id = ?";
-      db.query(q, [recipeId], (err, res, fields) => {
-        if (err) reject(err);
-        resolve(res);
+      pool.getConnection((err, conn) => {
+        const q =
+          "SELECT ingredient_id,name,amt FROM ingredient WHERE recipe_id = ?";
+        conn.query(q, [recipeId], (err, res, _) => {
+          if (err) reject(err);
+          resolve(res);
+        });
       });
     });
   }
@@ -22,9 +24,11 @@ class Ingredient {
   save(recipeId) {
     return new Promise((resolve, reject) => {
       const q = "INSERT into ingredient SET ?, recipe_id = ?";
-      db.query(q, [this, recipeId], (err, res, fields) => {
-        if (err) reject(err);
-        resolve(res);
+      pool.getConnection((err, conn) => {
+        conn.query(q, [this, recipeId], (err, res, _) => {
+          if (err) reject(err);
+          resolve(res);
+        });
       });
     });
   }
@@ -40,9 +44,11 @@ class Ingredient {
       const q = `UPDATE ingredient SET ${values.join(
         ", ",
       )} WHERE recipe_id = ?`;
-      db.query(q, [recipeId], (err, res, fields) => {
-        if (err) reject(err);
-        resolve(res);
+      pool.getConnection((err, conn) => {
+        conn.query(q, [recipeId], (err, res, _) => {
+          if (err) reject(err);
+          resolve(res);
+        });
       });
     });
   }

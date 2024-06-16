@@ -1,4 +1,4 @@
-import db from "./connection.js";
+import pool from "./connection.js";
 import Ingredient from "../models/ingredient.js";
 
 class Recipe {
@@ -31,9 +31,11 @@ class Recipe {
   // Code to get all recipes from the database
   static getAll() {
     return new Promise((resolve, reject) => {
-      db.query("SELECT * FROM recipe", (err, res) => {
-        if (err) return reject(err);
-        resolve(res);
+      pool.getConnection((err, conn) => {
+        conn.query("SELECT * FROM recipe", (err, res) => {
+          if (err) return reject(err);
+          resolve(res);
+        });
       });
     });
   }
@@ -41,11 +43,13 @@ class Recipe {
   // Code to get a recipe by ID from the database
   static getById(id) {
     return new Promise((resolve, reject) => {
-      const q = "SELECT * FROM recipe WHERE id = ?";
-      db.query(q, [id], (err, res) => {
-        if (err) return reject(err);
-        const [data] = res;
-        resolve(data);
+      pool.getConnection((err, conn) => {
+        const q = "SELECT * FROM recipe WHERE id = ?";
+        conn.query(q, [id], (err, res) => {
+          if (err) return reject(err);
+          const [data] = res;
+          resolve(data);
+        });
       });
     });
   }
@@ -53,35 +57,40 @@ class Recipe {
   // Code to save a recipe to the database
   save() {
     return new Promise((resolve, reject) => {
-      db.beginTransaction((err) => {
-        if (err) return reject(err);
+      pool.getConnection((err, conn) => {
+        conn.beginTransaction((err) => {
+          if (err) return reject(err);
 
-        const q = "INSERT INTO recipe SET ?";
-        const { ingredients, ...values } = this;
+          const q = "INSERT INTO recipe SET ?";
+          const { ingredients, ...values } = this;
 
-        db.query(q, [values], (err, result) => {
-          if (err) return db.rollback(() => reject(err));
+          conn.query(q, [values], (err, result) => {
+            if (err) return conn.rollback(() => reject(err));
 
-          const ingredientPromises = [];
-          ingredients.forEach(async (ingredient) => {
-            const ingredientObj = new Ingredient(ingredient);
-            ingredientPromises.push(
-              await new Promise((resolve, reject) => {
-                ingredientObj.save(result.insertId).then(resolve).catch(reject);
-              }),
-            );
-          });
-
-          Promise.all(ingredientPromises)
-            .then(() => {
-              db.commit((err) => {
-                if (err) return db.rollback(() => reject(err));
-                resolve();
-              });
-            })
-            .catch((err) => {
-              return db.rollback(() => reject(err));
+            const ingredientPromises = [];
+            ingredients.forEach(async (ingredient) => {
+              const ingredientObj = new Ingredient(ingredient);
+              ingredientPromises.push(
+                await new Promise((resolve, reject) => {
+                  ingredientObj
+                    .save(result.insertId)
+                    .then(resolve)
+                    .catch(reject);
+                }),
+              );
             });
+
+            Promise.all(ingredientPromises)
+              .then(() => {
+                conn.commit((err) => {
+                  if (err) return conn.rollback(() => reject(err));
+                  resolve();
+                });
+              })
+              .catch((err) => {
+                return conn.rollback(() => reject(err));
+              });
+          });
         });
       });
     });
@@ -96,9 +105,11 @@ class Recipe {
         .join(", ");
 
       const q = `UPDATE recipe SET ${values} WHERE id = ?`;
-      db.query(q, [id], (err, res) => {
-        if (err) return reject(err);
-        resolve(res);
+      pool.getConnection((err, conn) => {
+        conn.query(q, [id], (err, res) => {
+          if (err) return reject(err);
+          resolve(res);
+        });
       });
     });
   }
@@ -107,9 +118,11 @@ class Recipe {
   static remove(id) {
     return new Promise((resolve, reject) => {
       const q = "DELETE FROM recipe WHERE id = ?";
-      db.query(q, [id], (err, res) => {
-        if (err) return reject(err);
-        resolve(res);
+      pool.getConnection((err, conn) => {
+        conn.query(q, [id], (err, res) => {
+          if (err) return reject(err);
+          resolve(res);
+        });
       });
     });
   }
