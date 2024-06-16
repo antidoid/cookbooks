@@ -10,7 +10,6 @@ services:
     restart: always
     networks:
       - app-network
-    # network_mode: "host"
     ports:
       - "80:8080"
     depends_on:
