@@ -1,0 +1,44 @@
+networks:
+  app-network:
+    driver: bridge
+
+
+services:
+  api:
+    container_name: cookbooks-api
+    build: .
+    restart: always
+    networks:
+      - app-network
+    # network_mode: "host"
+    ports:
+      - "80:8080"
+    depends_on:
+      - db
+    environment:
+      DB_PASSWORD: $DB_PASSWORD
+      DB_DATABASE: $DB_DATABASE
+      DB_USER: $DB_USER
+      DB_PORT: 3306
+      DB_HOST: db
+      FIREBASE_CLIENT_EMAIL: $FIREBASE_CLIENT_EMAIL
+      FIREBASE_PROJECT_ID: $FIREBASE_PROJECT_ID
+      FIREBASE_PRIVATE_KEY: $FIREBASE_PRIVATE_KEY
+
+  db:
+    container_name: mysql-db
+    image: "mysql:8.2"
+    networks:
+      - app-network
+    volumes:
+      - data:/var/lib/mysql 
+      - ./setup.sql:/docker-entrypoint-initdb.d/setup.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: $DB_PASSWORD
+      MYSQL_DATABASE: $DB_DATABASE
+      MYSQL_USER: $DB_USER
+      MYSQL_PASSWORD: $DB_PASSWORD
+
+
+volumes:  
+  data: {}
