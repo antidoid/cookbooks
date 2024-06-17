@@ -1,0 +1,80 @@
+apiVersion: 2019-12-01
+location: centralindia
+name: cookbooks-backend
+properties:
+  containers:
+  - name: cookbooks-api
+    properties:
+      image: testaci998.azurecr.io/api
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 1.5
+      ports:
+      - port: 80
+      environmentVariables:
+      - name: PORT
+        value: 80
+      - name: DB_PASSWORD
+        secureValue: 
+      - name: DB_DATABASE
+        secureValue: 
+      - name: DB_USER
+        secureValue: 
+      - name: DB_PORT
+        secureValue:
+      - name: DB_HOST
+        secureValue: 
+      - name: FIREBASE_CLIENT_EMAIL
+        secureValue: 
+      - name: FIREBASE_PROJECT_ID
+        secureValue: 
+      - name: FIREBASE_PRIVATE_KEY
+        secureValue: 
+
+  - name: mysql
+    properties:
+      image: mysql:8.2
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 1.5
+      volumeMounts:
+      - mountPath: /var/lib/mysql
+        name: sqlvolume
+      - mountPath: /docker-entrypoint-initdb.d
+        name: sqlscriptvolume
+      environmentVariables:
+      - name: MYSQL_ROOT_PASSWORD
+        secureValue: 
+      - name: MYSQL_DATABASE
+        secureValue: 
+      - name: MYSQL_USER
+        secureValue: 
+      - name: MYSQL_PASSWORD
+        secureValue: 
+
+  osType: Linux
+  restartPolicy: Always
+  ipAddress:
+    type: Public
+    ports:
+    - protocol: tcp
+      port: 80
+    dnsNameLabel: cookbooks
+  volumes:
+  - name: sqlvolume
+    azureFile:
+      sharename: 
+      storageAccountName: 
+      storageAccountKey: 
+  - name: sqlscriptvolume
+    azureFile:
+      sharename: 
+      storageAccountName: 
+      storageAccountKey: 
+  imageRegistryCredentials:
+  - server: 
+    username: 
+    password: 
+type: Microsoft.ContainerInstance/containerGroups
