@@ -16,6 +16,7 @@ class Ingredient {
           if (err) reject(err);
           resolve(res);
         });
+        conn.release();
       });
     });
   }
@@ -29,6 +30,7 @@ class Ingredient {
           if (err) reject(err);
           resolve(res);
         });
+        conn.release();
       });
     });
   }
@@ -49,6 +51,7 @@ class Ingredient {
           if (err) reject(err);
           resolve(res);
         });
+        conn.release();
       });
     });
   }
