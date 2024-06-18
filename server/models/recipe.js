@@ -36,6 +36,7 @@ class Recipe {
           if (err) return reject(err);
           resolve(res);
         });
+        conn.release();
       });
     });
   }
@@ -91,8 +92,8 @@ class Recipe {
               .catch((err) => {
                 return conn.rollback(() => reject(err));
               });
-            conn.release();
           });
+          conn.release();
         });
       });
     });
