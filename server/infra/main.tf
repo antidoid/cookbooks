@@ -1,34 +1,53 @@
-data "azurerm_resource_group" "cookbooks-rg" {
-  name = "cookbooks-rg"
+resource "azurerm_resource_group" "cookbooks-rg" {
+  name     = "cookbooks-rg"
+  location = "Central India"
 }
 
-data "azurerm_container_registry" "cookbookssacr" {
+resource "azurerm_container_registry" "cookbooksacr" {
   name                = "cookbooksacr"
-  resource_group_name = data.azurerm_resource_group.cookbooks-rg.name
+  sku                 = "Basic"
+  resource_group_name = azurerm_resource_group.cookbooks-rg.name
+  location            = azurerm_resource_group.cookbooks-rg.location
+  admin_enabled       = true
+}
+
+resource "docker_image" "cookbooks-api" {
+  name         = "${azurerm_container_registry.cookbooksacr.login_server}/cookbooks-api"
+  keep_locally = false
+
+  build {
+    no_cache = true
+    context  = "${path.cwd}/.."
+  }
+}
+
+resource "docker_registry_image" "cookbooks-api" {
+  name = docker_image.cookbooks-api.name
 }
 
 resource "azurerm_user_assigned_identity" "ReadACR" {
-  location            = data.azurerm_resource_group.cookbooks-rg.location
+  location            = azurerm_resource_group.cookbooks-rg.location
   name                = "ReadACR"
-  resource_group_name = data.azurerm_resource_group.cookbooks-rg.name
+  resource_group_name = azurerm_resource_group.cookbooks-rg.name
 }
 
 resource "azurerm_role_assignment" "acireadacr" {
   principal_id                     = azurerm_user_assigned_identity.ReadACR.principal_id
   role_definition_name             = "AcrPull"
-  scope                            = data.azurerm_container_registry.cookbookssacr.id
+  scope                            = azurerm_container_registry.cookbooksacr.id
   skip_service_principal_aad_check = true
 }
 
 resource "azurerm_container_group" "cookbooks-backend" {
   name                = "cookbooks-backend"
-  location            = data.azurerm_resource_group.cookbooks-rg.location
-  resource_group_name = data.azurerm_resource_group.cookbooks-rg.name
+  location            = azurerm_resource_group.cookbooks-rg.location
+  resource_group_name = azurerm_resource_group.cookbooks-rg.name
   ip_address_type     = "Public"
   dns_name_label      = "cookbooks"
   os_type             = "Linux"
   depends_on = [
     azurerm_role_assignment.acireadacr,
+    docker_registry_image.cookbooks-api,
     azurerm_storage_account.cookbooks-storage,
     azurerm_storage_share.sql-setup,
     azurerm_storage_share.mysql-data
@@ -44,7 +63,7 @@ resource "azurerm_container_group" "cookbooks-backend" {
 
 
   image_registry_credential {
-    server                    = data.azurerm_container_registry.cookbookssacr.login_server
+    server                    = azurerm_container_registry.cookbooksacr.login_server
     user_assigned_identity_id = azurerm_user_assigned_identity.ReadACR.id
   }
 
@@ -105,8 +124,8 @@ resource "azurerm_container_group" "cookbooks-backend" {
 
 resource "azurerm_storage_account" "cookbooks-storage" {
   name                     = "cookbooksstorage"
-  resource_group_name      = data.azurerm_resource_group.cookbooks-rg.name
-  location                 = data.azurerm_resource_group.cookbooks-rg.location
+  resource_group_name      = azurerm_resource_group.cookbooks-rg.name
+  location                 = azurerm_resource_group.cookbooks-rg.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
   large_file_share_enabled = true
@@ -122,4 +141,10 @@ resource "azurerm_storage_share" "mysql-data" {
   name                 = "mysql-data"
   storage_account_name = azurerm_storage_account.cookbooks-storage.name
   quota                = 50
+}
+
+resource "azurerm_storage_share_file" "sql-setup" {
+  name             = "setup.sql"
+  storage_share_id = azurerm_storage_share.sql-setup.id
+  source           = "${path.cwd}/../setup.sql"
 }
