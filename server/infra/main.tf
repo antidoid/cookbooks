@@ -70,8 +70,8 @@ resource "azurerm_container_group" "cookbooks-backend" {
   container {
     name   = "cookbooks-api"
     image  = "cookbooksacr.azurecr.io/cookbooks-api"
-    cpu    = "1"
-    memory = "1.5"
+    cpu    = "0.1"
+    memory = "0.5"
 
     ports {
       port     = 80
@@ -97,8 +97,8 @@ resource "azurerm_container_group" "cookbooks-backend" {
   container {
     name   = "mysql"
     image  = "mysql:8.2"
-    cpu    = "1"
-    memory = "1.5"
+    cpu    = "0.1"
+    memory = "0.5"
     secure_environment_variables = {
       MYSQL_ROOT_PASSWORD = var.db-pass
       MYSQL_DATABASE      = var.db-name
@@ -128,19 +128,20 @@ resource "azurerm_storage_account" "cookbooks-storage" {
   location                 = azurerm_resource_group.cookbooks-rg.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
-  large_file_share_enabled = true
 }
 
 resource "azurerm_storage_share" "sql-setup" {
   name                 = "sql-setup"
   storage_account_name = azurerm_storage_account.cookbooks-storage.name
   quota                = 1
+  access_tier          = "Cool"
 }
 
 resource "azurerm_storage_share" "mysql-data" {
   name                 = "mysql-data"
   storage_account_name = azurerm_storage_account.cookbooks-storage.name
-  quota                = 50
+  quota                = 5
+  access_tier          = "Hot"
 }
 
 resource "azurerm_storage_share_file" "sql-setup" {
