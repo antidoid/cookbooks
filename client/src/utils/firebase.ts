@@ -37,7 +37,7 @@ export async function loginUser(providerName: "Google" | "Github") {
 export async function logoutUser() {
   try {
     await signOut(auth);
-  } catch (err) {
+  } catch (err: any) {
     throw {
       message: err.message,
     };
