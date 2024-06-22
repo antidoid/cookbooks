@@ -14,6 +14,7 @@ class Recipe {
     videolink,
     imagelink,
     ingredients,
+    owner,
   }) {
     this.name = name;
     this.description = description;
@@ -26,6 +27,7 @@ class Recipe {
     this.videolink = videolink;
     this.imagelink = imagelink;
     this.ingredients = ingredients;
+    this.owner = owner;
   }
 
   // Code to get all recipes from the database
@@ -126,6 +128,19 @@ class Recipe {
         conn.query(q, [id], (err, res) => {
           if (err) return reject(err);
           resolve(res);
+        });
+        conn.release();
+      });
+    });
+  }
+
+  static getRecipeOwner(id) {
+    return new Promise((resolve, reject) => {
+      const q = "SELECT owner from recipe WHERE id = ?";
+      pool.getConnection((err, conn) => {
+        conn.query(q, [id], (err, res) => {
+          if (err) return reject(err);
+          resolve(res[0].owner);
         });
         conn.release();
       });

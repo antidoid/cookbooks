@@ -2,10 +2,10 @@ import "dotenv/config";
 import express, { Router } from "express";
 import cors from "cors";
 import Recipe from "./controllers/recipe.js";
-import { isLoggedIn } from "./helpers/middleware.js";
+import { isLoggedIn, isRecipeOwner } from "./helpers/middleware.js";
 
 const app = express();
-app.use(cors({ origin: [process.env.FRONTEND_URL, "*"] }));
+app.use(cors());
 
 const router = Router();
 router.use(express.json());
@@ -18,7 +18,7 @@ router.get("/recipe", Recipe.getAllRecipe);
 router.get("/recipe/:id", Recipe.getRecipeById);
 router.post("/recipe", isLoggedIn, Recipe.createRecipe);
 router.put("/recipe/:id", isLoggedIn, Recipe.updateRecipe);
-router.delete("/recipe/:id", isLoggedIn, Recipe.deleteRecipe);
+router.delete("/recipe/:id", isLoggedIn, isRecipeOwner, Recipe.deleteRecipe);
 
 // Start the server
 app.listen(PORT, () => console.log("Backend server is running..."));

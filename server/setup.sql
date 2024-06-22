@@ -92,3 +92,9 @@ INSERT INTO ingredient (recipe_id, name, amt) VALUES
 (LAST_INSERT_ID(), 'Dried Oregano', '1 teaspoon'),
 (LAST_INSERT_ID(), 'Salt', 'to taste'),
 (LAST_INSERT_ID(), 'Black Pepper', 'to taste');
+
+ALTER TABLE recipe
+ADD owner VARCHAR(50);
+
+UPDATE recipe
+SET owner = 'kdQgZLRjlSYOU16DwIGHXhiUgs72';
