@@ -5,7 +5,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -13,20 +13,24 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import { getTime } from "@/utils/ui";
+import RecipeDetail from "./RecipeDetail";
 
 export type RecipeProps = {
-  name: string
+  id: number;
+  name: string;
   description: string;
   preparetime: string;
   serves: string;
   difficulty: string;
   recipetype: string;
   category: string;
-}
+  instruction: string;
+};
 
 export default function Recipe({
+  id,
   name,
   description,
   preparetime,
@@ -34,8 +38,8 @@ export default function Recipe({
   difficulty,
   category,
   recipetype,
-}: RecipeProps
-) {
+  instruction,
+}: RecipeProps) {
   return (
     <Dialog>
       <DialogTrigger>
@@ -55,15 +59,18 @@ export default function Recipe({
           </CardFooter>
         </Card>
       </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Are you absolutely sure?</DialogTitle>
+      <DialogContent className="w-11/12 md:w-3/5">
+        <DialogHeader className="text-start">
+          <DialogTitle className="text-4xl pb-2">{name}</DialogTitle>
           <DialogDescription>
-            This action cannot be undone. This will permanently delete your account
-            and remove your data from our servers.
+            <RecipeDetail
+              id={id}
+              description={description}
+              instruction={instruction}
+            />
           </DialogDescription>
         </DialogHeader>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

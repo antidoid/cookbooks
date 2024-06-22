@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchRecipes } from "./utils/api";
 import Navbar from "./components/Navbar";
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/components/theme-provider";
 import Recipe from "./components/Recipe";
 
 interface TRecipe {
@@ -31,6 +31,7 @@ function App() {
   const recipeElements = data?.map((recipe: TRecipe) => {
     return (
       <Recipe
+        id={recipe.id}
         key={recipe.id}
         name={recipe.name}
         description={recipe.description}
@@ -39,6 +40,7 @@ function App() {
         difficulty={recipe.difficulty}
         category={recipe.category}
         recipetype={recipe.recipetype}
+        instruction={recipe.instruction}
       />
     );
   });
@@ -51,8 +53,7 @@ function App() {
         </nav>
         <main className="flex flex-col justify-center items-center">
           <h1 className="my-10 text-6xl font-semibold">Recipes</h1>
-
-          <div className="grid grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {recipeElements}
           </div>
         </main>
