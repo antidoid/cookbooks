@@ -19,7 +19,7 @@ CREATE TABLE ingredient (
     recipe_id INT,
     name VARCHAR(255) NOT NULL,
     amt VARCHAR(50),
-    FOREIGN KEY (recipe_id) REFERENCES recipe(id)
+    FOREIGN KEY (recipe_id) REFERENCES recipe(id) ON DELETE CASCADE  
 );
 
 
