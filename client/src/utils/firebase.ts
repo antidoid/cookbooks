@@ -18,28 +18,4 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-
-export async function loginUser(providerName: "Google" | "Github") {
-  let provider: AuthProvider;
-  if (providerName === "Google") provider = new GoogleAuthProvider();
-  else provider = new GithubAuthProvider();
-  try {
-    const res = await signInWithPopup(auth, provider);
-    return res.user;
-  } catch (err: any) {
-    throw {
-      message: err.message,
-    };
-  }
-}
-
-export async function logoutUser() {
-  try {
-    await signOut(auth);
-  } catch (err: any) {
-    throw {
-      message: err.message,
-    };
-  }
-}
+export default getAuth(app);
