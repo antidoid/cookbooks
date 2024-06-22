@@ -45,10 +45,10 @@ export default function RecipeDetail({
   const ingredientsElements = data?.ingredients.map(
     (ingredient: TIngredient) => {
       return (
-        <div className="flex items-center md:items-start md:flex-col">
+        <li className="flex items-center md:items-start md:flex-col">
           <span>{ingredient.name}</span>
           <span className="text-sm ml-3 md:ml-0">{ingredient.amt}</span>
-        </div>
+        </li>
       );
     },
   );
@@ -60,15 +60,15 @@ export default function RecipeDetail({
   );
 
   return (
-    <div className="flex flex-col text-start">
+    <div className="flex flex-col">
       <p className="text-xl">{description}</p>
       <div>
         <h4 className="text-2xl my-4 font-semibold text-black dark:text-white">
           Ingredients
         </h4>
-        <p className="grid grid-cols-1 md:grid-cols-3 gap-2 text-base">
+        <ul className="grid grid-cols-1 md:grid-cols-3 gap-2 text-base">
           {ingredientsElements}
-        </p>
+        </ul>
       </div>
       <div>
         <h4 className="text-2xl my-4 font-semibold text-black dark:text-white">

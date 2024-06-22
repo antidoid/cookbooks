@@ -79,8 +79,10 @@ export default function Navbar() {
             </>
           ) : (
             <Dialog>
-              <DialogTrigger><Button variant="outline">Login</Button></DialogTrigger>
-              <DialogContent>
+              <DialogTrigger>
+                <Button variant="outline">Login</Button>
+              </DialogTrigger>
+              <DialogContent className="w-11/12 md:w-3/5 lg:w-2/5">
                 <DialogTitle></DialogTitle>
                 <Card>
                   <CardHeader className="space-y-1">
@@ -120,7 +122,7 @@ export default function Navbar() {
           )}
         </MenubarMenu>
         <ModeToggle />
-      </div >
+      </div>
     </Menubar>
   );
 }
