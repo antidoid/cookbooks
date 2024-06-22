@@ -1,0 +1,43 @@
+name: Blob storage website CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - "client/**"
+
+defaults:
+  run:
+    working-directory: ./client
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js 20
+      uses: actions/setup-node@v1
+      with:
+        node-version: 20
+
+    - name: npm install & build
+      run: |
+        npm clean-install
+        npm run build
+
+    - uses: azure/login@v1
+      with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Upload to blob storage
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+            az storage blob upload-batch --overwrite --account-name portfoliostorage29 --auth-mode key -d '$web' -s ./frontend/dist
+
+    - name: logout
+      run: |
+            az logout
+      if: always()
