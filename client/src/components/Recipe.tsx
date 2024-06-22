@@ -104,7 +104,7 @@ export default function Recipe({
             </CardFooter>
           </Card>
         </DialogTrigger>
-        <DialogContent className="overflow-y-scroll max-h-screen mt-12 md:my-0 w-11/12 md:w-3/5">
+        <DialogContent className="overflow-y-scroll h-5/6 md:overflow-y-auto md:h-auto md:my-0 w-11/12 md:w-3/5">
           <DialogHeader className="text-start">
             <DialogTitle className="text-4xl pb-2">{name}</DialogTitle>
             <DialogDescription>
