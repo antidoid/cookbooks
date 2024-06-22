@@ -1,7 +1,7 @@
 import auth from "@/utils/firebase";
 
-import { Trash2 } from "lucide-react"
-import { Loader2 } from "lucide-react"
+import { Trash2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,7 +12,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 import {
   Card,
   CardContent,
@@ -60,25 +60,25 @@ export default function Recipe({
   category,
   recipetype,
   instruction,
-  owner
+  owner,
 }: RecipeProps) {
   const mutation = useMutation({
-    mutationFn: deleteRecipe
-  })
+    mutationFn: deleteRecipe,
+  });
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
   auth.onAuthStateChanged((user) => setUser(user));
 
   const handleDelete = (e: React.FormEvent<HTMLButtonElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      mutation.mutate(id)
+      mutation.mutate(id);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-    mutation.isSuccess && setIsOpen(true)
-  }
+    mutation.isSuccess && setIsOpen(true);
+  };
 
   return (
     <div className="relative">
@@ -104,7 +104,7 @@ export default function Recipe({
             </CardFooter>
           </Card>
         </DialogTrigger>
-        <DialogContent className="w-11/12 md:w-3/5">
+        <DialogContent className="overflow-y-scroll max-h-screen mt-12 md:my-0 w-11/12 md:w-3/5">
           <DialogHeader className="text-start">
             <DialogTitle className="text-4xl pb-2">{name}</DialogTitle>
             <DialogDescription>
@@ -117,13 +117,12 @@ export default function Recipe({
           </DialogHeader>
         </DialogContent>
       </Dialog>
-      {
-        owner == user?.uid &&
-        <AlertDialog
-          open={isOpen}
-          onOpenChange={setIsOpen}
-        >
-          <AlertDialogTrigger onClick={() => setIsOpen(true)} className="absolute z-10 top-12 mt-1 right-2">
+      {owner == user?.uid && (
+        <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+          <AlertDialogTrigger
+            onClick={() => setIsOpen(true)}
+            className="absolute z-10 top-12 mt-1 right-2"
+          >
             <Button
               variant="destructive"
               size="sm"
@@ -137,10 +136,15 @@ export default function Recipe({
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                <p>This action cannot be undone. This will permanently delete your recipe</p>
-                {mutation.isError &&
-                  <p className="bg-red-200 text-red-600 rounded-md p-2 mt-2">Error deleting recipe, please try again</p>
-                }
+                <p>
+                  This action cannot be undone. This will permanently delete
+                  your recipe
+                </p>
+                {mutation.isError && (
+                  <p className="bg-red-200 text-red-600 rounded-md p-2 mt-2">
+                    Error deleting recipe, please try again
+                  </p>
+                )}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -148,14 +152,17 @@ export default function Recipe({
               <AlertDialogAction
                 disabled={mutation.isPending}
                 className="bg-red-200 hover:bg-red-300"
-                onClick={handleDelete}>
-                {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                onClick={handleDelete}
+              >
+                {mutation.isPending && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
                 <span className="text-red-600 font-bold">Delete</span>
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-      }
-    </div >
+      )}
+    </div>
   );
 }
