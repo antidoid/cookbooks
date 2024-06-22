@@ -47,7 +47,7 @@ export type RecipeProps = {
   instruction: string;
   owner: string;
 };
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { User } from "firebase/auth";
 
 export default function Recipe({
@@ -67,8 +67,11 @@ export default function Recipe({
   });
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
   const [user, setUser] = useState<User | null>(null);
-  auth.onAuthStateChanged((user) => setUser(user));
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => setUser(user));
+  }, []);
 
   const handleDelete = (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -107,39 +110,31 @@ export default function Recipe({
         <DialogContent className="overflow-y-scroll h-5/6 md:overflow-y-auto md:h-auto md:my-0 w-11/12 md:w-3/5">
           <DialogHeader className="text-start">
             <DialogTitle className="text-4xl pb-2">{name}</DialogTitle>
-            <DialogDescription>
-              <RecipeDetail
-                id={id}
-                description={description}
-                instruction={instruction}
-              />
-            </DialogDescription>
           </DialogHeader>
+          <RecipeDetail
+            id={id}
+            description={description}
+            instruction={instruction}
+          />
         </DialogContent>
       </Dialog>
-      {owner == user?.uid && (
+      {user && owner == user.uid && (
         <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-          <AlertDialogTrigger
+          <Button
+            variant="destructive"
+            size="sm"
             onClick={() => setIsOpen(true)}
-            className="absolute z-10 top-12 mt-1 right-2"
+            className="absolute z-10 top-2 right-2"
           >
-            <Button
-              variant="destructive"
-              size="sm"
-              className="z-10 absolute right-0 bottom-1"
-            >
-              <span className="sr-only">Delete</span>
-              <Trash2 className="size-4" />
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent className="w-11/12">
+            <span className="sr-only">Delete</span>
+            <Trash2 className="size-4" />
+          </Button>
+          <AlertDialogContent className="w-11/12 md:w-auto">
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                <p>
-                  This action cannot be undone. This will permanently delete
-                  your recipe
-                </p>
+                This action cannot be undone. This will permanently delete your
+                recipe
                 {mutation.isError && (
                   <p className="bg-red-200 text-red-600 rounded-md p-2 mt-2">
                     Error deleting recipe, please try again
