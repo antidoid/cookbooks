@@ -35,7 +35,7 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: |
-            az storage blob upload-batch --overwrite --account-name portfoliostorage29 --auth-mode key -d '$web' -s ./frontend/dist
+            az storage blob upload-batch --overwrite --account-name portfoliostorage29 --auth-mode key -d '$web' -s ./client/dist
 
     - name: logout
       run: |
