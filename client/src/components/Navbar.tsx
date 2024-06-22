@@ -29,6 +29,7 @@ import {
   AuthProvider,
   GithubAuthProvider,
   GoogleAuthProvider,
+  onAuthStateChanged,
   signInWithPopup,
   signOut,
   User,
@@ -38,6 +39,7 @@ import { useState } from "react";
 export default function Navbar() {
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<Error | null>(null);
+  auth.onAuthStateChanged((user) => setUser(user));
 
   const loginUser = async (providerName: "Google" | "Github") => {
     try {
@@ -45,8 +47,7 @@ export default function Navbar() {
         providerName == "Google"
           ? new GoogleAuthProvider()
           : new GithubAuthProvider();
-      const res = await signInWithPopup(auth, provider);
-      setUser(res.user);
+      await signInWithPopup(auth, provider);
     } catch (err: any) {
       setError(err);
     }
@@ -54,7 +55,6 @@ export default function Navbar() {
 
   const logoutUser = async () => {
     await signOut(auth);
-    setUser(null);
   };
 
   return (
