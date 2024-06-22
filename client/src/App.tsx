@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchRecipes } from "./utils/api";
 import Navbar from "./components/Navbar";
+import { ThemeProvider } from "@/components/theme-provider"
+import Recipe from "./components/Recipe";
 
 interface TRecipe {
   id: number;
@@ -28,23 +30,34 @@ function App() {
 
   const recipeElements = data?.map((recipe: TRecipe) => {
     return (
-      <div key={recipe.id} className="grid grid-cols-2">
-        <h2>{recipe.name}</h2>
-        <p>{recipe.description}</p>
-      </div>
+      <Recipe
+        key={recipe.id}
+        name={recipe.name}
+        description={recipe.description}
+        preparetime={recipe.preparetime}
+        serves={recipe.serves}
+        difficulty={recipe.difficulty}
+        category={recipe.category}
+        recipetype={recipe.recipetype}
+      />
     );
   });
 
   return (
-    <div className="min-h-screen">
-      <nav>
-        <Navbar />
-      </nav>
-      <main className="flex flex-col justify-center items-center">
-        <h1 className="my-10 text-6xl font-semibold">Recipes</h1>
-        {recipeElements}
-      </main>
-    </div>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <div className="min-h-screen">
+        <nav>
+          <Navbar />
+        </nav>
+        <main className="flex flex-col justify-center items-center">
+          <h1 className="my-10 text-6xl font-semibold">Recipes</h1>
+
+          <div className="grid grid-cols-2 gap-8">
+            {recipeElements}
+          </div>
+        </main>
+      </div>
+    </ThemeProvider>
   );
 }
 
