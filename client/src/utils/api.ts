@@ -1,4 +1,3 @@
-import { QueryCache, useQuery, useQueryClient } from "@tanstack/react-query";
 import auth from "@/utils/firebase";
 import queryClient from "@/main";
 
