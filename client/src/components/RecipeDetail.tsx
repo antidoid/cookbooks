@@ -20,8 +20,8 @@ export default function RecipeDetail({
   instruction,
 }: RecipeDetailProps) {
   const { data, isLoading, error } = useQuery({
-    queryKey: [`recipe/${id}`],
-    queryFn: () => fetchRecipe(id),
+    queryKey: ['recipes', id],
+    queryFn: () => fetchRecipe(id)
   });
 
   if (isLoading) {

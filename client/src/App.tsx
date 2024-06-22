@@ -3,6 +3,7 @@ import { fetchRecipes } from "./utils/api";
 import Navbar from "./components/Navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 import Recipe from "./components/Recipe";
+import { CircleX, Loader2 } from "lucide-react";
 
 interface TRecipe {
   id: number;
@@ -16,17 +17,14 @@ interface TRecipe {
   instruction: string;
   videolink: string;
   imagelink: string;
+  owner: string;
 }
 
 function App() {
-  const { data, error } = useQuery({
+  const { data, isError, isLoading } = useQuery({
     queryKey: ["recipes"],
     queryFn: fetchRecipes,
   });
-
-  if (error) {
-    return <div>Error fetching some recipes</div>;
-  }
 
   const recipeElements = data?.map((recipe: TRecipe) => {
     return (
@@ -41,6 +39,7 @@ function App() {
         category={recipe.category}
         recipetype={recipe.recipetype}
         instruction={recipe.instruction}
+        owner={recipe.owner}
       />
     );
   });
@@ -53,9 +52,21 @@ function App() {
         </nav>
         <main className="flex flex-col justify-center items-center">
           <h1 className="my-10 text-6xl font-semibold">Recipes</h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {recipeElements}
-          </div>
+          {
+            isLoading && <Loader2 className="size-16 animate-spin" />
+          }
+          {
+            isError ? (
+              <div className="mt-4 flex flex-col items-center p-4 rounded bg-red-200 text-xl text-red-400">
+                <CircleX className="size-16" />
+                <p className="ext-3xl"> Error fetching the recipes</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mx-2">
+                {recipeElements}
+              </div>
+            )
+          }
         </main>
       </div>
     </ThemeProvider>
