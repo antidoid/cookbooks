@@ -10,14 +10,32 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Modal } from "./Modal";
+
+const ingredientSchema = z.object({
+  name: z
+    .string()
+    .min(3, { message: "Ingredient name must be 3 or more characters" })
+    .max(50, { message: "Ingredient name must be 50 or less characters" }),
+  amt: z
+    .string()
+    .min(1, { message: "Amount must be one or more characters" })
+    .max(50, { message: "Amount must be 50 or less characters" }),
+});
 
 const RecipeSchema = z.object({
   name: z
@@ -28,14 +46,44 @@ const RecipeSchema = z.object({
     .string()
     .min(10, { message: "Must be 10 or more characters" })
     .max(50, { message: "Must be 50 or less characters" }),
-  preparetime: z
-    .number()
-    .min(0, { message: "Time must be more than 0 minutes" }),
-  serves: z.number().min(1, { message: "Must server 1 or more people" }),
+  preparetime: z.union([
+    z.coerce
+      .number({
+        message: "must be a number",
+      })
+      .int({
+        message: "must be a whole number",
+      })
+      .positive({
+        message: "Time must be 1 or more minutes",
+      }),
+    z.literal("").refine(() => false, {
+      message: "is required",
+    }),
+  ]),
+  serves: z.union([
+    z.coerce
+      .number({
+        message: "must be a number",
+      })
+      .int({
+        message: "must be a whole number",
+      })
+      .positive({
+        message: "Must serve 1 or more people",
+      }),
+    z.literal("").refine(() => false, {
+      message: "Number of people to serve is required",
+    }),
+  ]),
   difficulty: z.enum(["Easy", "Medium", "Hard"]),
   category: z.enum(["Appetizer", "Dessert", "Main Course", "Salad"]),
   recipetype: z.enum(["Veg", "Non-Veg"]),
-  // instruction
+  instruction: z
+    .string()
+    .min(10, { message: "Must be 10 or more characters" })
+    .max(300, { message: "Must be 200 or less characters" }),
+  ingredients: z.string(),
 });
 
 export type Recipe = z.infer<typeof RecipeSchema>;
@@ -65,17 +113,43 @@ export default function RecipeForm() {
     defaultValues: {
       name: "",
       description: "",
-      serves: 0,
-      category: "Main Course",
+      preparetime: "",
+      serves: "",
       difficulty: "Easy",
+      category: "Main Course",
       recipetype: "Veg",
-      preparetime: 0,
+      ingredients: "",
+      instruction: "",
     },
   });
 
-  async function onSubmit() {
-    console.log("Anything");
-    // console.log(values);
+  async function onSubmit(values: Recipe) {
+    const ingredients = values.ingredients
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0)
+      .map((line) => {
+        const [name, ...amtParts] = line.split(" ");
+        const amt = amtParts.join(" ");
+        if (
+          !name ||
+          !amt ||
+          name.length < 3 ||
+          name.length > 50 ||
+          amt.length < 1 ||
+          amt.length > 50
+        ) {
+          // let the user know about the mishap
+        }
+        const ingredient: z.infer<typeof ingredientSchema> = { name, amt };
+        return ingredient;
+      });
+
+    const recipe = {
+      ...values,
+      ingredients,
+    };
+    console.log(recipe);
   }
 
   useEffect(() => {
@@ -127,25 +201,157 @@ export default function RecipeForm() {
                 </FormItem>
               )}
             />
-            {/* <FormField */}
-            {/*   control={form.control} */}
-            {/*   name="preparetime" */}
-            {/*   render={({ field }) => ( */}
-            {/*     <FormItem> */}
-            {/*       <FormLabel>Prepare Time</FormLabel> */}
-            {/*       <FormControl> */}
-            {/*         <Input */}
-            {/*           type="number" */}
-            {/*           placeholder="Time to cook in minutes" */}
-            {/*           {...field} */}
-            {/*         /> */}
-            {/*       </FormControl> */}
-            {/*       <FormMessage /> */}
-            {/*     </FormItem> */}
-            {/*   )} */}
-            {/* /> */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <FormField
+                control={form.control}
+                name="preparetime"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Prepare Time</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Time to cook in minutes"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="serves"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Serves</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Number of people to serve"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <FormField
+                control={form.control}
+                name="difficulty"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Difficulty</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Easy">Easy</SelectItem>
+                        <SelectItem value="Medium">Medium</SelectItem>
+                        <SelectItem value="Hard">Hard</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Category</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Salad">Salad</SelectItem>
+                        <SelectItem value="Appetizer">Appetizer</SelectItem>
+                        <SelectItem value="Main Course">Main Course</SelectItem>
+                        <SelectItem value="Dessert">Dessert</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="recipetype"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Recipe Type</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Veg">Veg</SelectItem>
+                        <SelectItem value="Non-Veg">Non-Veg</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <FormField
+              control={form.control}
+              name="ingredients"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Ingredients</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Write ingredients only in this format:
+panner 250g
+spinach 250g"
+                      className="resize-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="instruction"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Instructions</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Share the instructions in sentences separated by period (.)"
+                      className="resize-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <div className="flex gap-4">
-              <Button>Submit</Button>
+              <Button type="submit">Submit</Button>
               <Button
                 type="button"
                 variant="destructive"
