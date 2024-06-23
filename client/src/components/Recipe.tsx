@@ -33,6 +33,10 @@ import { Button } from "./ui/button";
 import { deleteRecipe } from "@/utils/api";
 import { useMutation } from "@tanstack/react-query";
 
+import { useEffect, useState } from "react";
+import { User } from "firebase/auth";
+import { useToast } from "./ui/use-toast";
+
 export type RecipeProps = {
   id: number;
   name: string;
@@ -45,8 +49,6 @@ export type RecipeProps = {
   instruction: string;
   owner: string;
 };
-import { useEffect, useState } from "react";
-import { User } from "firebase/auth";
 
 export default function Recipe({
   id,
@@ -71,6 +73,8 @@ export default function Recipe({
     auth.onAuthStateChanged((user) => setUser(user));
   }, []);
 
+  const { toast } = useToast();
+
   const handleDelete = (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
@@ -79,6 +83,7 @@ export default function Recipe({
       console.log(error);
     }
     mutation.isSuccess && setIsOpen(true);
+    mutation.isSuccess && toast({ description: "Recipe deleted successfully" });
   };
 
   return (

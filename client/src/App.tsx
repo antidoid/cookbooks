@@ -1,10 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchRecipes } from "./utils/api";
-import Navbar from "./components/Navbar";
-import { ThemeProvider } from "@/components/theme-provider";
 import Recipe from "./components/Recipe";
-import { CircleX, Loader2 } from "lucide-react";
 import RecipeForm from "./components/RecipeForm";
+import Navbar from "./components/Navbar";
+import { fetchRecipes } from "./utils/api";
+
+import { useQuery } from "@tanstack/react-query";
+import { ThemeProvider } from "@/components/theme-provider";
+import { CircleX, Loader2 } from "lucide-react";
 
 interface TRecipe {
   id: number;
@@ -52,10 +53,8 @@ function App() {
           <Navbar />
         </nav>
         <main className="w-fit mx-auto flex flex-col justify-center items-center">
-          <div className="w-full px-2 flex justify-between">
-            <h1 className="top-0 my-2 md:my-4 text-4xl md:text-6xl font-semibold">
-              Recipes
-            </h1>
+          <div className="w-full my-4 px-2 flex justify-between items-center">
+            <h1 className="text-4xl md:text-6xl font-semibold">Recipes</h1>
             {isSuccess && <RecipeForm />}
           </div>
           {isLoading && <Loader2 className="size-16 animate-spin" />}

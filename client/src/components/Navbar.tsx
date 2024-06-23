@@ -80,7 +80,7 @@ export default function Navbar() {
           ) : (
             <Dialog>
               <DialogTrigger className="border-gray-100">Login</DialogTrigger>
-              <DialogContent className="w-11/12 md:w-3/5 lg:w-2/5">
+              <DialogContent className="w-11/12 md:w-2/5 lg:w-1/4">
                 <DialogTitle></DialogTitle>
                 <Card>
                   <CardHeader className="space-y-1">
@@ -90,7 +90,7 @@ export default function Navbar() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="grid gap-4">
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="flex flex-col gap-4">
                       <Button
                         onClick={() => loginUser("Github")}
                         variant="outline"
