@@ -64,6 +64,18 @@ export default function Recipe({
 }: RecipeProps) {
   const mutation = useMutation({
     mutationFn: deleteRecipe,
+    onSuccess: () => {
+      toast({ description: "Recipe deleted successfully" });
+      setIsOpen(false);
+    },
+    onError: () => {
+      toast({
+        variant: "destructive",
+        description: "Uh oh, Error deleting that recipe, try again",
+        duration: 2000,
+        className: "font-semibold",
+      });
+    },
   });
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -77,13 +89,7 @@ export default function Recipe({
 
   const handleDelete = (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    try {
-      mutation.mutate(id);
-    } catch (error) {
-      console.log(error);
-    }
-    mutation.isSuccess && setIsOpen(true);
-    mutation.isSuccess && toast({ description: "Recipe deleted successfully" });
+    mutation.mutate(id);
   };
 
   return (
@@ -138,11 +144,6 @@ export default function Recipe({
               <AlertDialogDescription>
                 This action cannot be undone. This will permanently delete your
                 recipe
-                {mutation.isError && (
-                  <p className="bg-red-200 text-red-600 rounded-md p-2 mt-2">
-                    Error deleting recipe, please try again
-                  </p>
-                )}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
