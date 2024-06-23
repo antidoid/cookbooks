@@ -128,10 +128,10 @@ export default function Recipe({
       {user && owner == user.uid && (
         <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
           <Button
-            variant="destructive"
+            variant="ghost"
             size="sm"
             onClick={() => setIsOpen(true)}
-            className="absolute z-10 top-2 right-2"
+            className="absolute z-10 top-2 right-2 text-red-400 hover:text-red-700"
           >
             <span className="sr-only">Delete</span>
             <Trash2 className="size-4" />
