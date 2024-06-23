@@ -1,18 +1,23 @@
 import { Dialog, DialogOverlay, DialogContent } from "@/components/ui/dialog";
 import { AlertConfirmation } from "./AlertConfirmation";
 import { Dispatch, SetStateAction, useState } from "react";
+import { DialogTitle } from "@radix-ui/react-dialog";
+import { Recipe } from "./RecipeForm";
+import { UseFormReturn } from "react-hook-form";
 
 type ModalProps = {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   children: React.ReactNode;
+  form: UseFormReturn<Recipe>;
 };
 
-export function Modal({ isOpen, setIsOpen, children }: ModalProps) {
+export function Modal({ isOpen, setIsOpen, form, children }: ModalProps) {
   const [showExitConfirmation, setShowExitConfirmation] = useState(false);
 
   const closeModal = () => {
     setIsOpen(false);
+    form.reset();
   };
 
   const handleOpenChange = () => {
@@ -28,6 +33,7 @@ export function Modal({ isOpen, setIsOpen, children }: ModalProps) {
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogOverlay>
         <DialogContent className="w-11/12 md:w-3/5 lg:w-1/2">
+          <DialogTitle className="text-2xl">Create a recipe</DialogTitle>
           <AlertConfirmation
             open={showExitConfirmation}
             setOpen={setShowExitConfirmation}
