@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 import Recipe from "./components/Recipe";
 import { CircleX, Loader2 } from "lucide-react";
+import RecipeForm from "./components/RecipeForm";
 
 interface TRecipe {
   id: number;
@@ -21,7 +22,7 @@ interface TRecipe {
 }
 
 function App() {
-  const { data, isError, isLoading } = useQuery({
+  const { data, isError, isLoading, isSuccess } = useQuery({
     queryKey: ["recipes"],
     queryFn: fetchRecipes,
   });
@@ -50,23 +51,24 @@ function App() {
         <nav>
           <Navbar />
         </nav>
-        <main className="flex flex-col justify-center items-center">
-          <h1 className="my-10 text-6xl font-semibold">Recipes</h1>
-          {
-            isLoading && <Loader2 className="size-16 animate-spin" />
-          }
-          {
-            isError ? (
-              <div className="mt-4 flex flex-col items-center p-4 rounded bg-red-200 text-xl text-red-400">
-                <CircleX className="size-16" />
-                <p className="ext-3xl"> Error fetching the recipes</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mx-2">
-                {recipeElements}
-              </div>
-            )
-          }
+        <main className="w-fit mx-auto flex flex-col justify-center items-center">
+          <div className="w-full px-2 flex justify-between">
+            <h1 className="top-0 my-2 md:my-4 text-4xl md:text-6xl font-semibold">
+              Recipes
+            </h1>
+            {isSuccess && <RecipeForm />}
+          </div>
+          {isLoading && <Loader2 className="size-16 animate-spin" />}
+          {isError ? (
+            <div className="mt-4 flex flex-col items-center p-4 rounded bg-red-200 text-xl text-red-400">
+              <CircleX className="size-16" />
+              <p className="ext-3xl"> Error fetching the recipes</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mx-2">
+              {recipeElements}
+            </div>
+          )}
         </main>
       </div>
     </ThemeProvider>
