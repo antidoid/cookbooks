@@ -131,7 +131,7 @@ export default function Recipe({
             variant="ghost"
             size="sm"
             onClick={() => setIsOpen(true)}
-            className="absolute z-10 top-2 right-2 text-red-400 hover:text-red-700"
+            className="absolute hover:bg-red-200 z-10 top-2 right-2 text-red-400 hover:text-red-700 transition-colors duration-300"
           >
             <span className="sr-only">Delete</span>
             <Trash2 className="size-4" />
