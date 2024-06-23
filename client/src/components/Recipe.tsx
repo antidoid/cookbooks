@@ -95,8 +95,8 @@ export default function Recipe({
   return (
     <div className="relative">
       <Dialog>
-        <DialogTrigger className="w-full">
-          <Card className="text-start opacity-80 hover:opacity-100 transition-opacity delay-100">
+        <DialogTrigger className="w-full h-full">
+          <Card className="h-full flex flex-col justify-evenly text-start opacity-80 hover:opacity-100 transition-opacity delay-100">
             <CardHeader>
               <CardTitle>
                 <div className="max-w-64">

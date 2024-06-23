@@ -24,7 +24,6 @@ export default function RecipeForm() {
     if (user) {
       setIsOpen(true);
     } else {
-      console.log("this ran");
       toast({
         title: "Uh oh, You're Not logged in",
         description: "Login to share your favourite recipes",
@@ -43,14 +42,8 @@ export default function RecipeForm() {
         <Plus />
       </Button>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Are you absolutely sure?</DialogTitle>
-            <DialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
-            </DialogDescription>
-          </DialogHeader>
+        <DialogContent className="w-11/12 md:w-3/5 lg:w-2/4">
+          <div>form goes here</div>
         </DialogContent>
       </Dialog>
     </div>
