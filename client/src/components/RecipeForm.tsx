@@ -5,6 +5,7 @@ import auth from "@/utils/firebase";
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Modal } from "./Modal";
 
 export default function RecipeForm() {
   const [user, setUser] = useState<User | null>(null);
@@ -35,11 +36,9 @@ export default function RecipeForm() {
         <span className="font-bold">Create</span>
         <Plus />
       </Button>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="w-11/12 md:w-3/5 lg:w-2/4">
-          <div>form goes here</div>
-        </DialogContent>
-      </Dialog>
+      <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+        <div>form goes here</div>
+      </Modal>
     </div>
   );
 }

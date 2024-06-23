@@ -62,22 +62,7 @@ export default function Recipe({
   instruction,
   owner,
 }: RecipeProps) {
-  const mutation = useMutation({
-    mutationFn: deleteRecipe,
-    onSuccess: () => {
-      toast({ description: "Recipe deleted successfully" });
-      setIsOpen(false);
-    },
-    onError: () => {
-      toast({
-        variant: "destructive",
-        description: "Uh oh, Error deleting that recipe, try again",
-        duration: 2000,
-        className: "font-semibold",
-      });
-    },
-  });
-
+  const { toast } = useToast();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const [user, setUser] = useState<User | null>(null);
@@ -85,7 +70,20 @@ export default function Recipe({
     auth.onAuthStateChanged((user) => setUser(user));
   }, []);
 
-  const { toast } = useToast();
+  const mutation = useMutation({
+    mutationFn: deleteRecipe,
+    onSuccess: () => {
+      toast({ title: "Recipe deleted successfully" });
+      setIsOpen(false);
+    },
+    onError: () => {
+      toast({
+        variant: "destructive",
+        title: "Uh oh, Error deleting that recipe, try again",
+        duration: 2000,
+      });
+    },
+  });
 
   const handleDelete = (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();

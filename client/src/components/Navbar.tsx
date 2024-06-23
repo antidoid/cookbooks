@@ -18,7 +18,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -35,11 +34,12 @@ import {
 } from "firebase/auth";
 import { useState } from "react";
 import { ModeToggle } from "./mode-toggle";
+import { useToast } from "./ui/use-toast";
 
 export default function Navbar() {
   const [user, setUser] = useState<User | null>(null);
-  const [error, setError] = useState<Error | null>(null);
   auth.onAuthStateChanged((user) => setUser(user));
+  const { toast } = useToast();
 
   const loginUser = async (providerName: "Google" | "Github") => {
     try {
@@ -48,13 +48,24 @@ export default function Navbar() {
           ? new GoogleAuthProvider()
           : new GithubAuthProvider();
       await signInWithPopup(auth, provider);
+      auth.currentUser &&
+        toast({ title: "Successfully logged in user", duration: 2000 });
     } catch (err: any) {
-      setError(err);
+      toast({
+        variant: "destructive",
+        title: "Unable to log in user, try again",
+        description: err.message,
+        duration: 4000,
+      });
     }
   };
 
   const logoutUser = async () => {
     await signOut(auth);
+    toast({
+      title: "User logged out successfully",
+      duration: 2000,
+    });
   };
 
   return (
@@ -107,13 +118,6 @@ export default function Navbar() {
                       </Button>
                     </div>
                   </CardContent>
-                  {error && (
-                    <CardFooter>
-                      <p className="bg-red-100 p-2 rounded text-gray-600">
-                        {error.message}
-                      </p>
-                    </CardFooter>
-                  )}
                 </Card>
               </DialogContent>
             </Dialog>

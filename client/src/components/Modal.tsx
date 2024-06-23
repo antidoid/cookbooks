@@ -1,33 +1,33 @@
-import {
-  Dialog,
-  DialogOverlay,
-  DialogContent,
-} from "@/components/ui/dialog"
-import { AlertConfirmation } from "./AlertConfirmation"
-import { useState } from 'react'
+import { Dialog, DialogOverlay, DialogContent } from "@/components/ui/dialog";
+import { AlertConfirmation } from "./AlertConfirmation";
+import { Dispatch, SetStateAction, useState } from "react";
 
-export function Modal({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  const [showExitConfirmation, setShowExitConfirmation] = useState(false)
+type ModalProps = {
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  children: React.ReactNode;
+};
+
+export function Modal({ isOpen, setIsOpen, children }: ModalProps) {
+  const [showExitConfirmation, setShowExitConfirmation] = useState(false);
 
   const closeModal = () => {
-  }
+    setIsOpen(false);
+  };
 
   const handleOpenChange = () => {
-    const isUserFormModified = localStorage.getItem("userFormModified")
+    const isUserFormModified = localStorage.getItem("userFormModified");
     if (isUserFormModified && JSON.parse(isUserFormModified)) {
-      setShowExitConfirmation(true)
+      setShowExitConfirmation(true);
     } else {
+      setIsOpen(false);
     }
-  }
+  };
 
   return (
-    <Dialog defaultOpen={true} open={true} onOpenChange={handleOpenChange}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogOverlay>
-        <DialogContent className="overflow-y-hidden">
+        <DialogContent className="w-11/12 md:w-3/5 lg:w-1/2">
           <AlertConfirmation
             open={showExitConfirmation}
             setOpen={setShowExitConfirmation}
@@ -38,5 +38,5 @@ export function Modal({
         </DialogContent>
       </DialogOverlay>
     </Dialog>
-  )
+  );
 }
