@@ -58,7 +58,7 @@ export default function Navbar() {
   };
 
   return (
-    <Menubar className="flex justify-between p-6">
+    <Menubar className="flex justify-between p-6 px-2 md:px-4">
       <h3 className="font-bold text-xl">Cookbooks</h3>
       <div className="flex gap-4 items-center">
         <MenubarMenu>
