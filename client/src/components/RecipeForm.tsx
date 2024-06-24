@@ -92,7 +92,7 @@ const RecipeWithIngredientsSchema = RecipeSchema.extend({
   ingredients: z.array(IngredientSchema),
 });
 
-type Recipe = z.infer<typeof RecipeSchema>;
+export type Recipe = z.infer<typeof RecipeSchema>;
 type Ingredient = z.infer<typeof IngredientSchema>;
 export type RecipeWithIngredients = z.infer<typeof RecipeWithIngredientsSchema>;
 
