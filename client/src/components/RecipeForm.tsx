@@ -89,22 +89,27 @@ const RecipeSchema = z.object({
 export type Recipe = z.infer<typeof RecipeSchema>;
 
 export default function RecipeForm() {
+  const { toast } = useToast();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   const [user, setUser] = useState<User | null>(null);
   useEffect(() => {
     auth.onAuthStateChanged((user) => setUser(user));
   }, []);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { toast } = useToast();
 
   const handleClick = () => {
     if (user) {
       setIsOpen(true);
     } else {
-      toast({
-        title: "Uh oh, You're Not logged in",
-        description: "Login to share your favourite recipes",
-        duration: 2000,
-      });
+      try {
+        toast({
+          title: "Uh oh, You're Not logged in",
+          description: "Login to share your favourite recipes",
+          duration: 2000,
+        });
+      } catch (err: any) {
+        console.log(err);
+      }
     }
   };
 
@@ -122,6 +127,11 @@ export default function RecipeForm() {
       instruction: "",
     },
   });
+
+  useEffect(() => {
+    // boolean value to indicate form has not been saved
+    localStorage.setItem("userFormModified", form.formState.isDirty.toString());
+  }, [form.formState.isDirty]);
 
   async function onSubmit(values: Recipe) {
     const ingredients = values.ingredients
@@ -151,11 +161,6 @@ export default function RecipeForm() {
     };
     console.log(recipe);
   }
-
-  useEffect(() => {
-    // boolean value to indicate form has not been saved
-    localStorage.setItem("userFormModified", form.formState.isDirty.toString());
-  }, [form.formState.isDirty]);
 
   return (
     <div>

@@ -32,13 +32,15 @@ import {
   signOut,
   User,
 } from "firebase/auth";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ModeToggle } from "./mode-toggle";
 import { useToast } from "./ui/use-toast";
 
 export default function Navbar() {
   const [user, setUser] = useState<User | null>(null);
-  auth.onAuthStateChanged((user) => setUser(user));
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => setUser(user));
+  }, []);
   const { toast } = useToast();
 
   const loginUser = async (providerName: "Google" | "Github") => {
