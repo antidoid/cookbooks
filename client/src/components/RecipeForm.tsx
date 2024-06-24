@@ -25,8 +25,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Modal } from "./Modal";
+import { useMutation } from "@tanstack/react-query";
+import { createRecipe } from "@/utils/api";
 
-const ingredientSchema = z.object({
+const IngredientSchema = z.object({
   name: z
     .string()
     .min(3, { message: "Ingredient name must be 3 or more characters" })
@@ -86,7 +88,13 @@ const RecipeSchema = z.object({
   ingredients: z.string(),
 });
 
-export type Recipe = z.infer<typeof RecipeSchema>;
+const RecipeWithIngredientsSchema = RecipeSchema.extend({
+  ingredients: z.array(IngredientSchema),
+});
+
+type Recipe = z.infer<typeof RecipeSchema>;
+type Ingredient = z.infer<typeof IngredientSchema>;
+export type RecipeWithIngredients = z.infer<typeof RecipeWithIngredientsSchema>;
 
 export default function RecipeForm() {
   const { toast } = useToast();
@@ -101,15 +109,11 @@ export default function RecipeForm() {
     if (user) {
       setIsOpen(true);
     } else {
-      try {
-        toast({
-          title: "Uh oh, You're Not logged in",
-          description: "Login to share your favourite recipes",
-          duration: 2000,
-        });
-      } catch (err: any) {
-        console.log(err);
-      }
+      toast({
+        title: "Uh oh, You're Not logged in",
+        description: "Login to share your favourite recipes",
+        duration: 2000,
+      });
     }
   };
 
@@ -133,6 +137,21 @@ export default function RecipeForm() {
     localStorage.setItem("userFormModified", form.formState.isDirty.toString());
   }, [form.formState.isDirty]);
 
+  const mutation = useMutation({
+    mutationFn: createRecipe,
+    onSuccess: () => {
+      toast({ title: "Recipe created successfully" });
+      setIsOpen(false);
+    },
+    onError: () => {
+      toast({
+        variant: "destructive",
+        title: "Uh oh, Error creating that recipe, try again",
+        duration: 2000,
+      });
+    },
+  });
+
   async function onSubmit(values: Recipe) {
     const ingredients = values.ingredients
       .split("\n")
@@ -151,15 +170,15 @@ export default function RecipeForm() {
         ) {
           // let the user know about the mishap
         }
-        const ingredient: z.infer<typeof ingredientSchema> = { name, amt };
+        const ingredient: Ingredient = { name, amt };
         return ingredient;
       });
 
-    const recipe = {
+    const recipe: RecipeWithIngredients = {
       ...values,
       ingredients,
     };
-    console.log(recipe);
+    mutation.mutate(recipe);
   }
 
   return (

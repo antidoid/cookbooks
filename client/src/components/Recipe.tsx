@@ -41,7 +41,7 @@ export type RecipeProps = {
   id: number;
   name: string;
   description: string;
-  preparetime: string;
+  preparetime: number;
   serves: string;
   difficulty: string;
   recipetype: string;

@@ -1,8 +1,14 @@
-export function getTime(time: string) {
-  const [hours, minutes, _] = time.split(":").map(Number);
-  const hoursPart = hours > 0 ? `${hours} hr ` : "";
-  const minutesPart = `${minutes} min`;
-  return hoursPart + minutesPart;
+export function getTime(time: number): string {
+  if (time < 60) {
+    return `${time} minute${time === 1 ? "" : "s"}`;
+  } else {
+    const hours = Math.floor(time / 60);
+    const minutes = time % 60;
+    const hoursString = `${hours} hour${hours === 1 ? "" : "s"}`;
+    const minutesString =
+      minutes > 0 ? ` ${minutes} minute${minutes === 1 ? "" : "s"}` : "";
+    return `${hoursString}${minutesString}`;
+  }
 }
 
 export function paragraphToList(paragraph: string): string[] {

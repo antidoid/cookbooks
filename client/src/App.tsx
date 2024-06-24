@@ -11,7 +11,7 @@ interface TRecipe {
   id: number;
   name: string;
   description: string;
-  preparetime: string;
+  preparetime: number;
   serves: string;
   difficulty: string;
   recipetype: string;

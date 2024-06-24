@@ -31,7 +31,11 @@ const recipe = {
     // Create new recipe
     createRecipe: async (req, res) => {
         try {
-            const recipe = new Recipe(req.body);
+            const recipeData = {
+                ...req.body,
+                owner: req.headers.user,
+            };
+            const recipe = new Recipe(recipeData);
             await recipe.save();
             res.status(200).send("Recipe created successfully");
         } catch (e) {
