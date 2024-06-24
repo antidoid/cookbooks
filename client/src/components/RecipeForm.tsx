@@ -197,7 +197,7 @@ export default function RecipeForm() {
               e.preventDefault();
               form.handleSubmit(onSubmit)();
             }}
-            className="space-y-6"
+            className="space-y-6 px-2"
           >
             <FormField
               control={form.control}

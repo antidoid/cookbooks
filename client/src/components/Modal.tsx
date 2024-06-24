@@ -33,7 +33,7 @@ export function Modal({ isOpen, setIsOpen, form, children }: ModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogOverlay>
-        <DialogContent className="w-11/12 md:w-3/5 lg:w-1/2 h-5/6">
+        <DialogContent className="p-0 w-11/12 md:w-3/5 lg:w-1/2 h-5/6">
           <ScrollArea className="p-6">
             <DialogTitle className="text-2xl mb-4">Create a recipe</DialogTitle>
             <AlertConfirmation
