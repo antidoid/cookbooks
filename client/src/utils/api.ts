@@ -37,7 +37,6 @@ export async function createRecipe(recipe: RecipeWithIngredients) {
       err: "User not signed in",
     };
   }
-  console.log(JSON.stringify(recipe));
 
   await fetch(`${import.meta.env.VITE_API_URL}/api/recipe`, {
     method: "POST",

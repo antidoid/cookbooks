@@ -5,7 +5,15 @@ import Recipe from "./controllers/recipe.js";
 import { isLoggedIn, isRecipeOwner } from "./helpers/middleware.js";
 
 const app = express();
-app.use(cors());
+
+const corsOptions = {
+  origin: "*",
+  methods: ["GET", "PUT", "POST", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "User"],
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 const router = Router();
 router.use(express.json());
