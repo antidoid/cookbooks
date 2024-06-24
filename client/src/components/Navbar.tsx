@@ -8,12 +8,7 @@ import {
   MenubarSeparator,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import {
   Card,
   CardContent,
@@ -35,6 +30,7 @@ import {
 import { useState, useEffect } from "react";
 import { ModeToggle } from "./mode-toggle";
 import { useToast } from "./ui/use-toast";
+import { User2 } from "lucide-react";
 
 export default function Navbar() {
   const [user, setUser] = useState<User | null>(null);
@@ -43,6 +39,8 @@ export default function Navbar() {
   }, []);
   const { toast } = useToast();
 
+  const [showLoginForm, setShowLoginForm] = useState<boolean>(false);
+
   const loginUser = async (providerName: "Google" | "Github") => {
     try {
       let provider: AuthProvider =
@@ -50,6 +48,7 @@ export default function Navbar() {
           ? new GoogleAuthProvider()
           : new GithubAuthProvider();
       await signInWithPopup(auth, provider);
+      auth.currentUser && setShowLoginForm(false);
       auth.currentUser &&
         toast({ title: "Successfully logged in user", duration: 2000 });
     } catch (err: any) {
@@ -78,9 +77,13 @@ export default function Navbar() {
           {user ? (
             <>
               <MenubarTrigger className="cursor-pointer">
-                <Avatar>
-                  <AvatarImage src={user?.photoURL || undefined} />
-                </Avatar>
+                {user.photoURL ? (
+                  <Avatar>
+                    <AvatarImage src={user.photoURL} />
+                  </Avatar>
+                ) : (
+                  <User2 className="size-4" />
+                )}
               </MenubarTrigger>
               <MenubarContent>
                 <MenubarItem>Welcome, {user.displayName}</MenubarItem>
@@ -91,8 +94,10 @@ export default function Navbar() {
               </MenubarContent>
             </>
           ) : (
-            <Dialog>
-              <DialogTrigger className="border-gray-100">Login</DialogTrigger>
+            <Dialog open={showLoginForm} onOpenChange={setShowLoginForm}>
+              <Button variant="ghost" onClick={() => setShowLoginForm(true)}>
+                Login
+              </Button>
               <DialogContent className="w-11/12 md:w-2/5 lg:w-1/4">
                 <DialogTitle></DialogTitle>
                 <Card>
