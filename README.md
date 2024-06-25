@@ -1,4 +1,4 @@
-# Azure Cloud Resume Challenge
+# Cookbooks
 
 The Cookbook Recipe Manager is a full-stack web application that allows users to create, manage, and share recipes. Built with React for the frontend and Node.js with Express and MySQL for the backend, it features user authentication via Firebase and a responsive design for seamless access on any device. Perfect for culinary enthusiasts to organize their culinary creations!
 
