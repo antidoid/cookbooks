@@ -17,7 +17,7 @@ resource "docker_image" "cookbooks-api" {
 
   build {
     no_cache = true
-    context  = "${path.cwd}/.."
+    context  = "${path.cwd}/server"
   }
 }
 

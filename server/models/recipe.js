@@ -11,8 +11,6 @@ class Recipe {
     recipetype,
     category,
     instruction,
-    videolink,
-    imagelink,
     ingredients,
     owner,
   }) {
@@ -24,8 +22,6 @@ class Recipe {
     this.recipetype = recipetype;
     this.category = category;
     this.instruction = instruction;
-    this.videolink = videolink;
-    this.imagelink = imagelink;
     this.ingredients = ingredients;
     this.owner = owner;
   }

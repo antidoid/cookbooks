@@ -17,8 +17,6 @@ interface TRecipe {
   recipetype: string;
   category: string;
   instruction: string;
-  videolink: string;
-  imagelink: string;
   owner: string;
 }
 

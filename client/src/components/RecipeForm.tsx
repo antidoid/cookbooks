@@ -84,7 +84,7 @@ const RecipeSchema = z.object({
   instruction: z
     .string()
     .min(10, { message: "Must be 10 or more characters" })
-    .max(300, { message: "Must be 200 or less characters" }),
+    .max(500, { message: "Must be 500 or less characters" }),
   ingredients: z.string(),
 });
 
@@ -142,6 +142,7 @@ export default function RecipeForm() {
     onSuccess: () => {
       toast({ title: "Recipe created successfully" });
       setIsOpen(false);
+      form.reset();
     },
     onError: () => {
       toast({
