@@ -17,7 +17,7 @@ resource "docker_image" "cookbooks-api" {
 
   build {
     no_cache = true
-    context  = "${path.cwd}/server"
+    context  = "${path.cwd}/../server"
   }
 }
 
@@ -52,14 +52,14 @@ resource "azurerm_container_app_environment" "cookbooks-app-env" {
   log_analytics_workspace_id = azurerm_log_analytics_workspace.cookbooks-logs.id
 }
 
-# resource "azurerm_container_app_environment_storage" "cookbooks-sql-setup-volume" {
-#   name                         = "sqlsetup"
-#   container_app_environment_id = azurerm_container_app_environment.cookbooks-app-env.id
-#   account_name                 = azurerm_storage_account.cookbooks-storage.name
-#   share_name                   = azurerm_storage_share.sql-setup.name
-#   access_key                   = azurerm_storage_account.cookbooks-storage.primary_access_key
-#   access_mode                  = "ReadOnly"
-# }
+resource "azurerm_container_app_environment_storage" "cookbooks-sql-setup-volume" {
+  name                         = "sqlsetup"
+  container_app_environment_id = azurerm_container_app_environment.cookbooks-app-env.id
+  account_name                 = azurerm_storage_account.cookbooks-storage.name
+  share_name                   = azurerm_storage_share.sql-setup.name
+  access_key                   = azurerm_storage_account.cookbooks-storage.primary_access_key
+  access_mode                  = "ReadOnly"
+}
 
 resource "azurerm_container_app_environment_storage" "cookbooks-sql-data-volume" {
   name                         = "sqldata"
@@ -79,7 +79,7 @@ resource "azurerm_container_app" "cookbooks-container-app" {
     azurerm_role_assignment.acireadacr,
     docker_registry_image.cookbooks-api,
     azurerm_storage_account.cookbooks-storage,
-    # azurerm_storage_share.sql-setup,
+    azurerm_storage_share.sql-setup,
     azurerm_storage_share.mysql-data
   ]
 
@@ -148,11 +148,11 @@ resource "azurerm_container_app" "cookbooks-container-app" {
       }
     }
 
-    # volume {
-    #   name         = "sql-setup"
-    #   storage_name = azurerm_container_app_environment_storage.cookbooks-sql-setup-volume.name
-    #   storage_type = "AzureFile"
-    # }
+    volume {
+      name         = "sql-setup"
+      storage_name = azurerm_container_app_environment_storage.cookbooks-sql-setup-volume.name
+      storage_type = "AzureFile"
+    }
 
     volume {
       name         = "sql-data"
@@ -165,10 +165,10 @@ resource "azurerm_container_app" "cookbooks-container-app" {
       image  = "mariadb:latest"
       cpu    = 0.25
       memory = "0.5Gi"
-      # volume_mounts {
-      #   name = "sql-setup"
-      #   path = "/docker-entrypoint-initdb.d"
-      # }
+      volume_mounts {
+        name = "sql-setup"
+        path = "/docker-entrypoint-initdb.d"
+      }
       volume_mounts {
         name = "sql-data"
         path = "/var/lib/mysql"
@@ -293,12 +293,12 @@ resource "azurerm_storage_account" "cookbooks-storage" {
   }
 }
 
-# resource "azurerm_storage_share" "sql-setup" {
-#   name                 = "sql-setup"
-#   storage_account_name = azurerm_storage_account.cookbooks-storage.name
-#   quota                = 1
-#   access_tier          = "Cool"
-# }
+resource "azurerm_storage_share" "sql-setup" {
+  name                 = "sql-setup"
+  storage_account_name = azurerm_storage_account.cookbooks-storage.name
+  quota                = 1
+  access_tier          = "Cool"
+}
 
 resource "azurerm_storage_share" "mysql-data" {
   name                 = "mysql-data"
@@ -307,8 +307,8 @@ resource "azurerm_storage_share" "mysql-data" {
   access_tier          = "Hot"
 }
 
-# resource "azurerm_storage_share_file" "sql-setup" {
-#   name             = "setup.sql"
-#   storage_share_id = azurerm_storage_share.sql-setup.id
-#   source           = "${path.cwd}/../setup.sql"
-# }
+resource "azurerm_storage_share_file" "sql-setup" {
+  name             = "setup.sql"
+  storage_share_id = azurerm_storage_share.sql-setup.id
+  source           = "${path.cwd}/../server/setup.sql"
+}
