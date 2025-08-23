@@ -17,13 +17,13 @@ resource "dockerhub_repository" "cookbooks-api" {
 }
 
 resource "docker_image" "cookbooks-api" {
-  name         = "antiderivative/cookbooks-api"
+  name         = "${var.dockerhub-username}/cookbooks-api"
   keep_locally = false
 
   build {
     no_cache = true
     context  = "${path.cwd}/../server"
-    tag      = ["registry-1.docker.io/antiderivative/cookbooks-api"]
+    tag      = ["registry-1.docker.io/${var.dockerhub-username}/cookbooks-api"]
   }
 }
 
@@ -114,7 +114,7 @@ resource "azurerm_container_app" "cookbooks-container-app" {
   template {
     container {
       name   = "cookbooks-api"
-      image  = "antiderivative/cookbooks-api"
+      image  = "${var.dockerhub-username}/cookbooks-api"
       cpu    = 0.25
       memory = "0.5Gi"
       env {
