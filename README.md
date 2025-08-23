@@ -17,9 +17,6 @@ The Cookbook Recipe Manager is a full-stack web application that allows users to
 
 ## [Live Demo 🔗](https://cookbooksstorage.z29.web.core.windows.net/)
 
-## TO-DO
-- [ ] Migrate from Azure Container Registry to Docker Hub
-
 ## Author
 - Twitter: [@piyshsingh998](https://twitter.com/piyushsingh998)
 - LinkedIn: [piyushsingh998](https://linkedin.com/in/piyushsingh998)

@@ -3,40 +3,47 @@ resource "azurerm_resource_group" "cookbooks-rg" {
   location = "Central India"
 }
 
-resource "azurerm_container_registry" "cookbooksacr" {
-  name                = "cookbooksacr"
-  sku                 = "Basic"
-  resource_group_name = azurerm_resource_group.cookbooks-rg.name
-  location            = azurerm_resource_group.cookbooks-rg.location
-  admin_enabled       = true
+# resource "azurerm_container_registry" "cookbooksacr" {
+#   name                = "cookbooksacr"
+#   sku                 = "Basic"
+#   resource_group_name = azurerm_resource_group.cookbooks-rg.name
+#   location            = azurerm_resource_group.cookbooks-rg.location
+#   admin_enabled       = true
+# }
+
+resource "dockerhub_repository" "cookbooks-api" {
+  name      = "cookbooks-api"
+  namespace = var.dockerhub-username
 }
 
 resource "docker_image" "cookbooks-api" {
-  name         = "${azurerm_container_registry.cookbooksacr.login_server}/cookbooks-api"
+  name         = "antiderivative/cookbooks-api"
   keep_locally = false
 
   build {
     no_cache = true
     context  = "${path.cwd}/../server"
+    tag      = ["registry-1.docker.io/antiderivative/cookbooks-api"]
   }
 }
 
 resource "docker_registry_image" "cookbooks-api" {
-  name = docker_image.cookbooks-api.name
+  name       = docker_image.cookbooks-api.name
+  depends_on = [dockerhub_repository.cookbooks-api]
 }
 
-resource "azurerm_user_assigned_identity" "ReadACR" {
-  location            = azurerm_resource_group.cookbooks-rg.location
-  name                = "ReadACR"
-  resource_group_name = azurerm_resource_group.cookbooks-rg.name
-}
+# resource "azurerm_user_assigned_identity" "ReadACR" {
+#   location            = azurerm_resource_group.cookbooks-rg.location
+#   name                = "ReadACR"
+#   resource_group_name = azurerm_resource_group.cookbooks-rg.name
+# }
 
-resource "azurerm_role_assignment" "acireadacr" {
-  principal_id                     = azurerm_user_assigned_identity.ReadACR.principal_id
-  role_definition_name             = "AcrPull"
-  scope                            = azurerm_container_registry.cookbooksacr.id
-  skip_service_principal_aad_check = true
-}
+# resource "azurerm_role_assignment" "acireadacr" {
+#   principal_id                     = azurerm_user_assigned_identity.ReadACR.principal_id
+#   role_definition_name             = "AcrPull"
+#   scope                            = azurerm_container_registry.cookbooksacr.id
+#   skip_service_principal_aad_check = true
+# }
 
 resource "azurerm_log_analytics_workspace" "cookbooks-logs" {
   name                = "cookbooks-logs"
@@ -76,24 +83,24 @@ resource "azurerm_container_app" "cookbooks-container-app" {
   resource_group_name          = azurerm_resource_group.cookbooks-rg.name
   revision_mode                = "Single"
   depends_on = [
-    azurerm_role_assignment.acireadacr,
+    # azurerm_role_assignment.acireadacr,
     docker_registry_image.cookbooks-api,
     azurerm_storage_account.cookbooks-storage,
     azurerm_storage_share.sql-setup,
     azurerm_storage_share.mysql-data
   ]
 
-  identity {
-    type = "UserAssigned"
-    identity_ids = [
-      azurerm_user_assigned_identity.ReadACR.id
-    ]
-  }
+  # identity {
+  #   type = "UserAssigned"
+  #   identity_ids = [
+  #     azurerm_user_assigned_identity.ReadACR.id
+  #   ]
+  # }
 
-  registry {
-    server   = azurerm_container_registry.cookbooksacr.login_server
-    identity = azurerm_user_assigned_identity.ReadACR.id
-  }
+  # registry {
+  #   server   = azurerm_container_registry.cookbooksacr.login_server
+  #   identity = azurerm_user_assigned_identity.ReadACR.id
+  # }
 
   ingress {
     target_port = 80
@@ -107,7 +114,7 @@ resource "azurerm_container_app" "cookbooks-container-app" {
   template {
     container {
       name   = "cookbooks-api"
-      image  = "cookbooksacr.azurecr.io/cookbooks-api"
+      image  = "antiderivative/cookbooks-api"
       cpu    = 0.25
       memory = "0.5Gi"
       env {
@@ -194,7 +201,7 @@ resource "azurerm_container_app" "cookbooks-container-app" {
 }
 
 output "container-app-domain" {
-  value = azurerm_container_app.cookbooks-container-app.latest_revision_fqdn
+  value = "https://${azurerm_container_app.cookbooks-container-app.latest_revision_fqdn}"
 }
 
 # resource "azurerm_container_group" "cookbooks-backend" {

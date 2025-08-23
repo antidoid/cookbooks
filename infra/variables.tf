@@ -22,3 +22,11 @@ variable "firebase-project-id" {
 variable "firebase-private-key" {
   type = string
 }
+
+variable "dockerhub-username" {
+  type = string
+}
+
+variable "dockerhub-password" {
+  type = string
+}

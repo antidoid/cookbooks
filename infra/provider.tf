@@ -8,6 +8,10 @@ terraform {
       source  = "kreuzwerker/docker"
       version = "3.0.2"
     }
+    dockerhub = {
+      source  = "BarnabyShearer/dockerhub"
+      version = ">= 0.0.15"
+    }
   }
 }
 
@@ -17,8 +21,13 @@ provider "azurerm" {
 
 provider "docker" {
   registry_auth {
-    address  = azurerm_container_registry.cookbooksacr.login_server
-    username = azurerm_container_registry.cookbooksacr.admin_username
-    password = azurerm_container_registry.cookbooksacr.admin_password
+    address  = "registry-1.docker.io"
+    username = var.dockerhub-username
+    password = var.dockerhub-password
   }
+}
+
+provider "dockerhub" {
+  username = var.dockerhub-username
+  password = var.dockerhub-password
 }
